@@ -1,0 +1,19 @@
+{
+  "name": "cg-server",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "start": "nodemon server.js &"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "lottie-web": "^5.5.9",
+    "socket.io": "^2.2.0",
+    "vue": "^2.6.10",
+    "vue-socket.io": "^3.0.7"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions"
+  ]
+}

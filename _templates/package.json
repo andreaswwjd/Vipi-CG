@@ -1,0 +1,24 @@
+{
+  "name": "cg-server",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "start": "node server.js"
+  },
+  "bin": "server.js",
+  "pkg": {
+    "assets": ["session.txt", "index.html", "css/**/*.css", "fonts/**/*", "js/**/*.js", "img/**/**"]
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "global": "^4.4.0",
+    "lottie-web": "^5.5.9",
+    "socket.io": "^2.2.0",
+    "vue": "^2.6.10",
+    "vue-socket.io": "^3.0.7"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions"
+  ]
+}
