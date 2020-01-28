@@ -1,5 +1,5 @@
 {
-  "name": "caspar-html-templates",
+  "name": "template",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -8,13 +8,10 @@
   },
   "dependencies": {
     "casparcg-connection": "^4.9.0",
-    "core-js": "^2.6.5",
-    "cors": "^2.8.5",
     "express": "^4.17.1",
     "global": "^4.4.0",
     "lottie-web": "^5.5.9",
     "min-parse": "^1.3.0",
-    "mongodb": "2.2",
     "socket.io": "^2.2.0",
     "vue": "^2.6.10",
     "vue-router": "^3.0.3",

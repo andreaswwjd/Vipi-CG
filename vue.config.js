@@ -7,7 +7,7 @@ module.exports = {
   //   before: server
   // },
   pages: {
-    // index: 'src/_server.js',
+    index: 'src/_server.js',
     // control: 'src/_control.js',
     // green: {
     //   entry: 'src/_all.js',
@@ -20,7 +20,7 @@ module.exports = {
     // datum: 'src/datum.js',
     // lowerthird: 'src/lowerthird.js',
     // namnskylt: 'src/namnskylt.js',
-    sangplatta: 'src/sangplatta.js',
+    // sangplatta: 'src/sangplatta.js',
     // notis: 'src/notis.js',
     // swish: 'src/swish.js',
     // tema: 'src/tema.js',
