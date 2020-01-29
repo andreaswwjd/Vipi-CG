@@ -17,16 +17,16 @@ export default new Router({
       name: 'screen',
       component: () => import('@/views/Screen.vue')
     },
-    // {
-    //   path: '/green',
-    //   name: 'green',
-    //   component: () => import('@/views/Green.vue')
-    // },
-    // {
-    //   path: '/control',
-    //   name: 'control',
-    //   component: () => import('@/views/Control.vue')
-    // },
+    {
+      path: '/green',
+      name: 'green',
+      component: () => import('@/views/Green.vue')
+    },
+    {
+      path: '/control',
+      name: 'control',
+      component: () => import('@/views/Control.vue')
+    },
     {
       path: '/songs',
       name: 'songs',

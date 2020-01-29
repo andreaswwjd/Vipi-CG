@@ -1,7 +1,8 @@
 <template>
   <div class="routes">
     <h1><router-link class="box shadow" to="/screen">Screen</router-link></h1>
-    <!-- <router-link to="/control">control</router-link> -->
+    <h1><router-link class="box shadow" to="/green">Green</router-link></h1>
+    <h1><router-link class="box shadow" to="/control">Control</router-link></h1>
     <h1><router-link class="box shadow" to="/songs">Songs</router-link></h1>
   </div>
 </template>

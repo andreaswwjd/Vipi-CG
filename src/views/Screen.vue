@@ -1,6 +1,6 @@
 <template>
   <div class="container" :style="{background: bg}">
-    <!-- <Datum/>
+    <Datum/>
     <LivsvagTitle/>
     <LowerThird/>
     <Namnskylt/>
@@ -8,33 +8,33 @@
     <Swish/>
     <Tema/>
     <Title/>
-    <Bibelord/> -->
+    <Bibelord/>
     <Sangplatta/>
   </div>
 </template>
 <script>
-// import Datum from '@/templates/Datum.vue';
-// import LivsvagTitle from '@/templates/LivsvagTitle.vue';
-// import LowerThird from '@/templates/LowerThird.vue';
-// import Namnskylt from '@/templates/Namnskylt.vue';
-// import Notis from '@/templates/Notis.vue';
-// import Swish from '@/templates/Swish.vue';
-// import Tema from '@/templates/Tema.vue';
-// import Title from '@/templates/Title.vue';
-// import Bibelord from '@/templates/Bibelord.vue';
+import Datum from '@/templates/Datum.vue';
+import LivsvagTitle from '@/templates/LivsvagTitle.vue';
+import LowerThird from '@/templates/LowerThird.vue';
+import Namnskylt from '@/templates/Namnskylt.vue';
+import Notis from '@/templates/Notis.vue';
+import Swish from '@/templates/Swish.vue';
+import Tema from '@/templates/Tema.vue';
+import Title from '@/templates/Title.vue';
+import Bibelord from '@/templates/Bibelord.vue';
 import Sangplatta from '@/templates/Sangplatta.vue';
 
 export default {
   components: {
-    // Datum,
-    // LivsvagTitle,    
-    // LowerThird,
-    // Namnskylt,
-    // Notis,
-    // Swish,
-    // Tema,
-    // Title,
-    // Bibelord,
+    Datum,
+    LivsvagTitle,    
+    LowerThird,
+    Namnskylt,
+    Notis,
+    Swish,
+    Tema,
+    Title,
+    Bibelord,
     Sangplatta,
   },
   data: ()=>({
