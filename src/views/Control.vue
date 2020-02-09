@@ -41,15 +41,20 @@
 import { setTimeout, setInterval } from 'timers';
 // @ is an alias to /src
 
-import Datum from '@/templates/Datum.vue';
-import LivsvagTitle from '@/templates/LivsvagTitle.vue';
-import LowerThird from '@/templates/LowerThird.vue';
-import Namnskylt from '@/templates/Namnskylt.vue';
-import Notis from '@/templates/Notis.vue';
-import Swish from '@/templates/Swish.vue';
-import Tema from '@/templates/Tema.vue';
-import Title from '@/templates/Title.vue';
-import Bibelord from '@/templates/Bibelord.vue';
+import Datum from '@/EFS/Datum.vue';
+import LivsvagTitle from '@/EFS/LivsvagTitle.vue';
+import LowerThird from '@/EFS/LowerThird.vue';
+import Namnskylt from '@/EFS/Namnskylt.vue';
+import Notis from '@/EFS/Notis.vue';
+import Swish from '@/EFS/Swish.vue';
+import Tema from '@/EFS/Tema.vue';
+import Title from '@/EFS/Title.vue';
+import Bibelord from '@/EFS/Bibelord.vue';
+
+import FKABDatum from '@/FKAB/Datum.vue';
+import FKABNamnskylt from '@/FKAB/Namnskylt.vue';
+import FKABNotis from '@/FKAB/Notis.vue';
+import FKABTitle from '@/FKAB/Title.vue';
 
 import TableView from '@/components/TableView.vue';
 
@@ -65,6 +70,11 @@ export default {
     Tema,
     Title, 
     Bibelord, 
+
+    FKABDatum,
+    FKABNamnskylt,
+    FKABNotis,
+    FKABTitle,
     
     TableView
   },
@@ -81,6 +91,28 @@ export default {
         titlesmall: []
       },
       blocks: [
+        {
+          placeholders: { f0:'Namn',f1:'Titel' },
+          event: 'FKABnamnskylt',
+          title: 'Namnskylt (FKAB)',
+          component: 'FKABNamnskylt'
+        },{
+          placeholders: { f0:'Plats', f1:'Tidpunkt' },
+          event: 'FKABdatum',
+          title: 'Datum (FKAB)',
+          component: 'FKABDatum'
+        },{
+          placeholders: { f0:'i', f1:'Typ (fet stil)', f2:'Notis' },
+          event: 'FKABnotis',
+          title: 'Notis (FKAB)',
+          component: 'FKABNotis'
+        },{
+          placeholders: { f0:'Rubrik',f1:'Talare',f2:'etc.',f3:'Tema' },
+          event: 'FKABtitle',
+          title: 'Titel (FKAB)',
+          component: 'FKABTitle'
+        },
+        
         {
           placeholders: { f0:'Rubrik',f1:'Talare',f2:'etc.',f3:'Tema' },
           event: 'lowerthird',

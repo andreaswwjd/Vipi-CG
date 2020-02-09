@@ -121,7 +121,7 @@
 
 <script>
 
-import Sangplatta from '@/templates/Sangplatta.vue';
+import Sangplatta from '@/EFS/Sangplatta.vue';
 
 //import TableView from '@/components/TableView.vue';
 

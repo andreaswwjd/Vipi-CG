@@ -10,19 +10,29 @@
     <Title/>
     <Bibelord/>
     <Sangplatta/>
+    
+    <FKABDatum/>
+    <FKABNamnskylt/>
+    <FKABNotis/>
+    <FKABTitle/>
   </div>
 </template>
 <script>
-import Datum from '@/templates/Datum.vue';
-import LivsvagTitle from '@/templates/LivsvagTitle.vue';
-import LowerThird from '@/templates/LowerThird.vue';
-import Namnskylt from '@/templates/Namnskylt.vue';
-import Notis from '@/templates/Notis.vue';
-import Swish from '@/templates/Swish.vue';
-import Tema from '@/templates/Tema.vue';
-import Title from '@/templates/Title.vue';
-import Bibelord from '@/templates/Bibelord.vue';
-import Sangplatta from '@/templates/Sangplatta.vue';
+import Datum from '@/EFS/Datum.vue';
+import LivsvagTitle from '@/EFS/LivsvagTitle.vue';
+import LowerThird from '@/EFS/LowerThird.vue';
+import Namnskylt from '@/EFS/Namnskylt.vue';
+import Notis from '@/EFS/Notis.vue';
+import Swish from '@/EFS/Swish.vue';
+import Tema from '@/EFS/Tema.vue';
+import Title from '@/EFS/Title.vue';
+import Bibelord from '@/EFS/Bibelord.vue';
+import Sangplatta from '@/EFS/Sangplatta.vue';
+
+import FKABDatum from '@/FKAB/Datum.vue';
+import FKABNamnskylt from '@/FKAB/Namnskylt.vue';
+import FKABNotis from '@/FKAB/Notis.vue';
+import FKABTitle from '@/FKAB/Title.vue';
 
 export default {
   components: {
@@ -36,9 +46,13 @@ export default {
     Title,
     Bibelord,
     Sangplatta,
+    FKABDatum,
+    FKABNamnskylt,
+    FKABNotis,
+    FKABTitle,
   },
   data: ()=>({
-    bg: '#0F0'
+    bg: ''
   }),
   sockets: {
     data({event, data}){
@@ -58,8 +72,8 @@ body {
   height: 56.25vw;
   max-width: 100vw;
   max-height: 100vh;
-  /* background-image: url(./assets/testscreen.png); */
-  /* background-color: #0F0; */
+  /* background-image: url(../assets/testscreen.png); */
+  background-color: #0F0;
   background-repeat: no-repeat;
   background-size: cover; 
 }
