@@ -1,7 +1,7 @@
 <template>
   <dir class="lowerthird" :class="{ active }">
     <div class="icon">
-      <!-- <img src="../assets/EFS_vit_web.svg" alt=""> -->
+      <img src="../assets/gubbe.png">
     </div>
     <div class="tema" >
       <div class="bricka">
@@ -149,8 +149,8 @@ $slidetime: 1000ms;
     position: absolute;
     right: 0;
     bottom: 0;
-    height: 150px;
-    width: 150px;
+    height: 350px;
+    width: 350px;
     z-index: 1;
     display: flex;
     align-items: center;
@@ -158,8 +158,8 @@ $slidetime: 1000ms;
 
     img {
       height: 100%;
-      transition: 1s 2s transform; 
-      transform: translate(100%, 30%) rotate(20deg);
+      transition: 1.5s 2s transform ease-out; 
+      transform: translate(100%, 0%) rotate(20deg);
     }
   }
   .tema {
@@ -285,7 +285,7 @@ $slidetime: 1000ms;
   transition-delay: 0ms; 
   opacity: 1;
   .icon img {
-    transform: translate(0, 0) rotate(0);
+    transform: translate(26%, 0) rotate(0);
   }
   .tema .bricka {
     transform: translateX(0);

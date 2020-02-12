@@ -93,6 +93,7 @@ body {
   align-items: center;
   justify-content: center;
   position: absolute;
+  overflow: hidden;
   bottom: 0; 
   top: 0; 
   left: 0; 

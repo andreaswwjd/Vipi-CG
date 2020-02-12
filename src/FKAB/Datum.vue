@@ -67,10 +67,10 @@ export default {
 
 <style lang="scss" scoped>
 
-// @font-face {
-//   font-family: Gotham Ultra;
-//   src: url(../fonts/Gotham/Gotham-Ultra.otf);
-// }
+@font-face {
+  font-family: Gotham Ultra;
+  src: url(../fonts/Gotham/Gotham-Ultra.otf);
+}
 
 @font-face {
   font-family: Lato;
@@ -83,7 +83,7 @@ export default {
   font-size: 30px;
 
   strong {
-    // font-family: Lato;
+    font-family: Gotham Ultra;
     font-weight: bold;
     text-transform: uppercase;
     letter-spacing: 3px;

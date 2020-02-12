@@ -1,7 +1,7 @@
 <template>
   <dir class="namnskylt" :class="{ active }">
     <div class="icon">
-      <img src="../assets/EFS_vit_web.svg">
+      <img src="../assets/gubbe_icon.png">
     </div>
     <div class="bricka">
       <div class="name" v-html="f0" v-if="f0"></div>
