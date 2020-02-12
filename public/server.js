@@ -149,8 +149,17 @@ const addTemplate = async ({
     // Copy template to Caspar templates folder
     let template = path.join(path.dirname(process.execPath), templateName)
     let templatesFolder = path.join(CGPaths.template, '_sangserver/')
-    let err = await fs.copy(template, templatesFolder);
-    if (err) {console.log('Template not found!', err); return;} 
+    try {
+      await fs.copy(template, templatesFolder);
+    } catch(err) {
+      if (err) {
+        console.log(`
+  The template "${templateName}" could not be found! 
+  Be shore to have the template in the same directory as the program!
+  `, err); 
+        return;
+      } 
+    }
 
     // Add template
     try{
@@ -158,7 +167,7 @@ const addTemplate = async ({
       // await connection.cgAdd(channel, layer, flashlayer, path.join("_sangserver", templateName), playOnLoad)
     } catch (err){
       if (err) {
-        console.log('Template not propperly added!', err)
+        console.log(`The template "${templateName}" could not be added to Caspar CG`, err)
         return
       } 
     }
