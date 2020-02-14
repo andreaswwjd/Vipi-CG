@@ -51,7 +51,7 @@ import { close } from 'fs';
 export default {
   data() {
     return {
-      comp: 'title',
+      comp: 'EFS_Title',
       f0: 'Titel', // '000000089011111118902222267890333',//
       f1: '',
       f2: ``,

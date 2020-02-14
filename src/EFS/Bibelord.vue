@@ -13,7 +13,7 @@ export default {
   },
   data() {
     return {
-      comp: 'bibelord',
+      comp: 'EFS_Bibelord',
       f0: 'Uppsala',
       f1: '13 maj 2019',
       active: false,

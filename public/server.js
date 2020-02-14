@@ -1,3 +1,6 @@
+// TODO:
+// Separate songtemplate logic to separate file.
+
 const express = require('express')
 const app = express()
 const server = require('http').createServer(app);
@@ -20,7 +23,7 @@ const connect = async ()=>{
 
   connection.onConnected = () => {
     console.log(`CasparCG connected on ${cgHost}:${cgPort}!`)
-    addTemplate({templateName: 'sangplatta'})
+    addTemplate({templateName: 'Sangplatta'})
   }
 }
 
@@ -70,6 +73,9 @@ const serve = async app => {
     });
 
     client.on('data', ({event, data, channel = 1, layer = 700, flashLayer = 1, playOnLoad = 0}) => {
+      // TODO: Make this work with any template
+      // BUG: Now every time a control-client plays any template, the template added will be affected as well...
+      // FIX: Make control-client define layer and channel!
       if (/.?_play$/.test(event)) {
         console.log('PLAY', channel, layer, flashLayer)
         //connection.cgAdd(channel, layer, flashLayer, "_sangserver/sangplatta", playOnLoad)

@@ -1,9 +1,9 @@
 <template>
   <div>
 
-    <div class="block" v-for="block in blocks" :key="block.event">
-      <TableView v-bind="block">
-        <component :is="block.component" :class="{active: tick}"/>
+    <div class="control" v-for="control in controls" :key="control.event">
+      <TableView v-bind="control">
+        <component :is="control.component" :class="{active: tick}"/>
       </TableView>
     </div>
 
@@ -39,47 +39,20 @@
 
 <script>
 import { setTimeout, setInterval } from 'timers';
+import components, { controls } from './_components';
 // @ is an alias to /src
-
-import Datum from '@/EFS/Datum.vue';
-import LivsvagTitle from '@/EFS/LivsvagTitle.vue';
-import LowerThird from '@/EFS/LowerThird.vue';
-import Namnskylt from '@/EFS/Namnskylt.vue';
-import Notis from '@/EFS/Notis.vue';
-import Swish from '@/EFS/Swish.vue';
-import Tema from '@/EFS/Tema.vue';
-import Title from '@/EFS/Title.vue';
-import Bibelord from '@/EFS/Bibelord.vue';
-
-import FKABDatum from '@/FKAB/Datum.vue';
-import FKABNamnskylt from '@/FKAB/Namnskylt.vue';
-import FKABNotis from '@/FKAB/Notis.vue';
-import FKABTitle from '@/FKAB/Title.vue';
 
 import TableView from '@/components/TableView.vue';
 
 export default {
   name: 'remote',
   components: {
-    Datum,
-    LivsvagTitle,    
-    LowerThird,
-    Namnskylt,
-    Notis,
-    Swish,
-    Tema,
-    Title, 
-    Bibelord, 
-
-    FKABDatum,
-    FKABNamnskylt,
-    FKABNotis,
-    FKABTitle,
-    
+    ...components,
     TableView
   },
   data () {
     return {
+      controls,
       tick: true,
       bg: 'transparent',
       db: {
@@ -90,76 +63,6 @@ export default {
         lowerthird: [],
         titlesmall: []
       },
-      blocks: [
-        {
-          placeholders: { f0:'Namn',f1:'Titel' },
-          event: 'FKABnamnskylt',
-          title: 'Namnskylt (FKAB)',
-          component: 'FKABNamnskylt'
-        },{
-          placeholders: { f0:'Plats', f1:'Tidpunkt' },
-          event: 'FKABdatum',
-          title: 'Datum (FKAB)',
-          component: 'FKABDatum'
-        },{
-          placeholders: { f0:'i', f1:'Typ (fet stil)', f2:'Notis' },
-          event: 'FKABnotis',
-          title: 'Notis (FKAB)',
-          component: 'FKABNotis'
-        },{
-          placeholders: { f0:'Rubrik',f1:'Talare',f2:'etc.',f3:'Tema' },
-          event: 'FKABtitle',
-          title: 'Titel (FKAB)',
-          component: 'FKABTitle'
-        },
-        
-        {
-          placeholders: { f0:'Rubrik',f1:'Talare',f2:'etc.',f3:'Tema' },
-          event: 'lowerthird',
-          title: 'Titel (Lower third)',
-          component: 'LowerThird'
-        },{
-          placeholders: { f0:'Namn',f1:'Titel' },
-          event: 'namnskylt',
-          title: 'Namnskylt',
-          component: 'Namnskylt'
-        },{
-          placeholders: { f0:'Rubrik', f1:'Tema', f2:'etc.' },
-          event: 'title',
-          title: 'Titel (fullskärm)',
-          component: 'Title'
-        },{
-          placeholders: { f0:'Plats', f1:'Tidpunkt' },
-          event: 'datum',
-          title: 'Datum',
-          component: 'Datum'
-        },{
-          placeholders: { f0:'Tema/Sammanhang' },
-          event: 'tema',
-          title: 'Tema',
-          component: 'Tema'
-        },{
-          placeholders: { f0:'i', f1:'Typ (fet stil)', f2:'Notis' },
-          event: 'notis',
-          title: 'Notis',
-          component: 'Notis'
-        },{
-          placeholders: { f0:'Swish', f1:'Bg', f2:'Hemsida' },
-          event: 'swish',
-          title: 'Swish',
-          component: 'Swish'
-        },{
-          placeholders: { f0:'Rubrik', f1:'Tema', f2:'etc.' },
-          event: 'livsvag_title',
-          title: 'Titel (Livsväg)',
-          component: 'LivsvagTitle'
-        },{
-          placeholders: { f0:'Text', f1:'Referens' },
-          event: 'bibelord',
-          title: 'Bibelord',
-          component: 'Bibelord'
-        }
-      ],
       compositions: [
         [{
           component: 'title',
@@ -201,8 +104,8 @@ export default {
       })
     },
     stopAll () {
-      this.blocks.map(block=>{
-        this.$socket.emit('data', {event: block.event+'_stop'})
+      this.controls.map(control=>{
+        this.$socket.emit('data', {event: control.event+'_stop'})
       })
     }
   },
@@ -238,7 +141,7 @@ body {
   justify-content: center;
   position: relative;
 }
-.block {
+.control {
   width: 100%;
   margin: 10px auto;
   display: inline-block;

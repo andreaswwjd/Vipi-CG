@@ -15,7 +15,7 @@
 export default {
   data() {
     return {
-      comp: 'FKABnamnskylt',
+      comp: 'FKAB_Namnskylt',
       f0: 'Andreas Lundström',
       f1: 'Filmproducent',
       active: false

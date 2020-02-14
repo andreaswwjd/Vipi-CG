@@ -17,7 +17,7 @@ import { constants } from 'crypto';
 export default {
   data() {
     return {
-      comp: 'swish',
+      comp: 'EFS_Swish',
       f0: 'Swish: 900 99 03',
       f1: 'Bankgiro: 900-9903',
       f2: 'www.efs.nu/ge',

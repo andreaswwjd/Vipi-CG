@@ -4,6 +4,11 @@
     <h1><router-link class="box shadow" to="/green">Green</router-link></h1>
     <h1><router-link class="box shadow" to="/control">Control</router-link></h1>
     <h1><router-link class="box shadow" to="/songs">Songs</router-link></h1>
+    <!-- TODO: Common settings:              -->
+    <!--    • PI-ADDRESS of current computer -->
+    <!--    • Caspar CG connection?          -->
+    <!--    • Caspar CG PI-ADDRESS and PORT  -->
+    <h1><router-link class="box shadow" to="/test">Test</router-link></h1>
   </div>
 </template>
 <script>

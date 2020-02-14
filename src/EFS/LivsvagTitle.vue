@@ -58,7 +58,7 @@ export default {
   components: { Lottie },
   data() {
     return {
-      comp: 'livsvag_title',
+      comp: 'EFS_LivsvagTitle',
       f0: 'Titel', // '000000089011111118902222267890333',//
       f1: 'Titel',
       f2: `Titel`,

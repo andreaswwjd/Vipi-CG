@@ -32,7 +32,7 @@ const easing = BezierEasing(0,.54,1,.18)
 export default {
   data() {
     return {
-      comp: 'FKABtitle',
+      comp: 'FKAB_Title',
       f0: 'Own your emotions',
       f1: 'Bokrelease',
       f2: 'med Frida Nilsson',

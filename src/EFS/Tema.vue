@@ -10,7 +10,7 @@
 export default {
   data() {
     return {
-      comp: 'tema',
+      comp: 'EFS_Tema',
       f0: 'Teologi',
       active: false
     }

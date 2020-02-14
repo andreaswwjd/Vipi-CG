@@ -1,0 +1,58 @@
+{
+  "title": [],
+  "tema": [],
+  "datum": [],
+  "namnskylt": [],
+  "lowerthird": [],
+  "titlesmall": [],
+  "livsvag_title": [],
+  "swish": [],
+  "FKABnamnskylt": [
+    {
+      "f0": "Viktor Paulsson",
+      "f1": "Moderator",
+      "active": false,
+      "out": 6
+    },
+    {
+      "f0": "Frida Nilsson",
+      "f1": "Författare",
+      "active": true,
+      "out": 6
+    },
+    {
+      "f0": "Anneli Lindqvist",
+      "f1": "Kurator",
+      "active": false,
+      "out": 6
+    },
+    {
+      "f0": "Beatrice Hagfalk",
+      "f1": "Kurator",
+      "active": false,
+      "out": 6
+    },
+    {
+      "f0": "Thomas Larsson",
+      "f1": "Manegementkonsult, VD IDI-profiling",
+      "active": false,
+      "out": "6"
+    },
+    {
+      "f0": "Jan-Gunnar Eurell",
+      "f1": "Vice VD Ålandsbanken",
+      "active": false,
+      "out": 6
+    }
+  ],
+  "FKABdatum": [
+    {
+      "f0": "Stockholm",
+      "f1": "20 februari 2020",
+      "active": true,
+      "out": 6
+    }
+  ],
+  "FKABnotis": [],
+  "FKABtitle": []
+}

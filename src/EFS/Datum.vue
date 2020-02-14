@@ -15,7 +15,7 @@ const convert = require('xml-js');
 export default {
   data() {
     return {
-      comp: 'datum',
+      comp: 'EFS_Datum',
       f0: 'Uppsala',
       f1: '13 maj 2019',
       active: false

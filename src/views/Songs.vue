@@ -121,9 +121,7 @@
 
 <script>
 
-import Sangplatta from '@/EFS/Sangplatta.vue';
-
-//import TableView from '@/components/TableView.vue';
+import Sangplatta from '@/components/Sangplatta.vue';
 
 export default {
   name: 'songs',
@@ -349,7 +347,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 
 @font-face {
   font-family: Josefin Sans;

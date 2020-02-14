@@ -1,57 +1,15 @@
 <template>
   <div class="container" :style="{background: bg}">
-    <Datum/>
-    <LivsvagTitle/>
-    <LowerThird/>
-    <Namnskylt/>
-    <Notis/>
-    <Swish/>
-    <Tema/>
-    <Title/>
-    <Bibelord/>
-    <Sangplatta/>
-
-    <FKABDatum/>
-    <FKABNamnskylt/>
-    <FKABNotis/>
-    <FKABTitle/>
+    <component v-for="comp_name in comp_names" :is="comp_name" :key="comp_name"></component>
   </div>
 </template>
 <script>
-import Datum from '@/EFS/Datum.vue';
-import LivsvagTitle from '@/EFS/LivsvagTitle.vue';
-import LowerThird from '@/EFS/LowerThird.vue';
-import Namnskylt from '@/EFS/Namnskylt.vue';
-import Notis from '@/EFS/Notis.vue';
-import Swish from '@/EFS/Swish.vue';
-import Tema from '@/EFS/Tema.vue';
-import Title from '@/EFS/Title.vue';
-import Bibelord from '@/EFS/Bibelord.vue';
-import Sangplatta from '@/EFS/Sangplatta.vue';
-
-import FKABDatum from '@/FKAB/Datum.vue';
-import FKABNamnskylt from '@/FKAB/Namnskylt.vue';
-import FKABNotis from '@/FKAB/Notis.vue';
-import FKABTitle from '@/FKAB/Title.vue';
+import components from './_components';
 
 export default {
-  components: {
-    Datum,
-    LivsvagTitle,    
-    LowerThird,
-    Namnskylt,
-    Notis,
-    Swish,
-    Tema,
-    Title,
-    Bibelord,
-    Sangplatta,
-    FKABDatum,
-    FKABNamnskylt,
-    FKABNotis,
-    FKABTitle,
-  },
+  components,
   data: ()=>({
+    comp_names: Object.keys(components),
     bg: 'transparent'
   }),
   sockets: {
@@ -63,7 +21,10 @@ export default {
   }
 }
 </script>
-<style>
+<style scoped>
+html {
+  overflow: hidden;
+}
 body {
   color: #262626;
   position: relative;

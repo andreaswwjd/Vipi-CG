@@ -27,7 +27,7 @@
 export default {
   data() {
     return {
-      comp: 'lowerthird',
+      comp: 'EFS_LowerThird',
       f0: 'Vad kan vi göra för förföljda kristna?',
       f1: '',
       f2: '',

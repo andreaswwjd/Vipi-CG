@@ -4,10 +4,14 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build"
+    "build": "vue-cli-service build",
+    "pkg": "vue-cli-service build && cd _templates && pkg .",
+    "caspar": "vue-cli-service build caspar",
+    "update-hard": "git reset --hard && git pull && cd _templates/ && npm install && cd .."
   },
   "dependencies": {
     "casparcg-connection": "^4.9.0",
+    "ejs": "^3.0.1",
     "express": "^4.17.1",
     "global": "^4.4.0",
     "lottie-web": "^5.5.9",

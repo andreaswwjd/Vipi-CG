@@ -18,7 +18,7 @@
 export default {
   data() {
     return {
-      comp: 'notis',
+      comp: 'EFS_Notis',
       f0: '',
       f1: '',
       f2: 'Vad kan vi göra för förföljda kristna?',

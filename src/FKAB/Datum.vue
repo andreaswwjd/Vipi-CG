@@ -15,7 +15,7 @@ const convert = require('xml-js');
 export default {
   data() {
     return {
-      comp: 'FKABdatum',
+      comp: 'FKAB_Datum',
       f0: 'Uppsala',
       f1: '13 maj 2019',
       active: false
@@ -48,12 +48,14 @@ export default {
     }
   },
   created() {
+    // To work with CasparCG.
     window.play   = this.play
     window.stop   = this.stop
     window.next   = this.next
     window.update = this.update
   },
   sockets: {
+    // To work with the custom control panel.
     data: function({event, data}) {
       if (event == this.comp+'_play') this.play()
       if (event == this.comp+'_stop') this.stop()
