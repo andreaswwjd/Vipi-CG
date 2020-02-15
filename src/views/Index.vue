@@ -32,6 +32,7 @@ export default {
   height: 100vh;
   width: 100vw;
   display: flex;
+  flex-wrap: wrap;
   flex-direction: rows;
   justify-content: center;
   align-items: center;

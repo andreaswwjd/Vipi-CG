@@ -25,7 +25,7 @@
   </dir>
 </template>
 <script>
-require('../assets/bezier-easing.min.js')
+let BezierEasing = require('../assets/bezier-easing.min.js')
 
 const easing = BezierEasing(0,.54,1,.18)
 

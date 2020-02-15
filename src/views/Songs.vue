@@ -380,7 +380,7 @@ h1, h2, h3, h4, h5, h6, button {
   font-family: Josefin SemiBold, Helvetica, Arial, sans-serif;
 }
 
-input, textarea {
+input, textarea, p {
   font-family: Josefin Sans;
 }
 
