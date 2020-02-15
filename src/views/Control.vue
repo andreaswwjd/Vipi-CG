@@ -26,6 +26,32 @@
         <component :is="control.component" :class="{active: tick}"/>
       </TableView>
     </div>
+
+    <div class="modal" :class="{open: modalIsOpen}">
+      <div class="backgropp"></div>
+      <div class="modal-content box shadow">
+        <div class="columns">
+          <div class="column col-4 bg-light">
+            <h2>Saved sessions</h2>
+            <div class="list">
+              <p class="box big-btn shadow" v-for="session in ['Söndag morgonmöte', 'Söndagsgudstjänst', 'Måndag']">
+                {{session}}
+              </p>
+            </div>
+          </div>
+          <div class="column col-8">
+            <div class="close" @click="modalIsOpen = false;">&times;</div>
+            <img src="@/assets/new.png" style="width: 25%;">
+            <h1>Give me a name!</h1>
+            <div class="input" :class="{error}">
+              <input v-model="newSessionName"/>
+            </div>
+            <p v-if="error" class="error">{{error}}</p>
+            <div class="big-btn box shadow" @click="newSession(newSessionName)">Create session</div>
+          </div>
+        </div>
+      </div>
+    </div>
     
   </div>
 </template>
@@ -48,6 +74,9 @@ export default {
       controls,
       tick: true,
       bg: 'transparent',
+      newSessionName: '',
+      error: '',
+      modalIsOpen: true,
       db: {
         title: [],
         tema: [],
@@ -56,17 +85,29 @@ export default {
         lowerthird: [],
         titlesmall: []
       },
-      compositions: [
-        [{
-          component: 'title',
-          play: 0,
-          stop: 3
-        },{
-          component: 'namnskylt',
-          play: 3,
-          stop: 0
-        }]
-      ]
+      sessions: {
+        'session-1': {
+          name: 'session-1',
+          templates: {
+            'FKAB_Title': [{
+              f0: '',
+              f1: '',
+              f3: '',
+            }]
+          }
+        }
+      },
+      // compositions: [
+      //   [{
+      //     component: 'title',
+      //     play: 0,
+      //     stop: 3
+      //   },{
+      //     component: 'namnskylt',
+      //     play: 3,
+      //     stop: 0
+      //   }]
+      // ]
     }
   },
   created () {
@@ -100,6 +141,28 @@ export default {
       this.controls.map(control=>{
         this.$socket.emit('data', {event: control.event+'_stop'})
       })
+    },
+    newSession(newSessionName) {
+      if(!newSessionName) {
+        this.error = 'OBS! The session need a name.'
+        return 
+      }
+      if (this.sessions.find(s=>s.file == newSessionName)) {
+        this.error = 'OBS! The session already exists.'
+        return 
+      }
+
+      // this.songs.push({
+      //   file: newSessionName+'.txt',
+      //   f0: '',
+      //   f1: '',
+      //   f2: ''
+      // })
+      // this.edit = true
+      // this.error = ''
+      // this.newSessionName = ''
+      // this.modalIsOpen = false
+      // this.song_nr = this.songs.length - 1
     }
   },
   sockets: {
@@ -120,6 +183,7 @@ export default {
 @import "../assets/spectre/_mixins";
 @import "../assets/spectre/_buttons";
 @import "../assets/spectre/_forms";
+// @import "../assets/spectre/_layout";
 
 @font-face {
   font-family: Josefin Sans;
@@ -139,7 +203,7 @@ h1, h2, h3, h4, h5, h6, button {
   font-family: Josefin SemiBold, Helvetica, Arial, sans-serif;
 }
 
-input, textarea, p {
+input, textarea, p, .big-btn {
   font-family: Josefin Sans;
 }
 
@@ -176,8 +240,9 @@ $max_width: 1000px;
 }
 .control {
   width: 100%;
+  max-width: $max_width;
   margin: 10px auto;
-  display: inline-block;
+  display: block;
 }
 
 .slider {
@@ -222,6 +287,143 @@ $max_width: 1000px;
 
 
 
+.box {
+  box-shadow: 0 2.8px 2.2px rgba(100, 100, 100, 0.034);
+
+  padding: 15px;
+  background: white;
+  border-radius: 5px;
+}
+
+.shadow {
+  box-shadow:
+    0 2.8px 2.2px rgba(100, 100, 100, 0.034),
+    0 6.7px 5.3px rgba(100, 100, 100, 0.048),
+    0 22.3px 17.9px rgba(100, 100, 100, 0.072);
+
+}
+
+.big-btn {
+  margin: 10px;
+  flex-basis: 33%;
+  min-width: 150px;
+  max-height: 50px;
+  min-height: 50px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  transition: 500ms;
+  background: white;
+  cursor: pointer;
+
+  code {
+    color: gray;
+  }
+
+  &.edit {
+    min-width: 50px;
+    min-height: initial;
+    position: absolute;
+    top: 15px;
+    right: 0;
+    border: lightcoral solid 1px;
+    border-radius: 50px;
+    box-shadow: 0 2.8px 2.2px rgba(100, 100, 100, 0.034);
+    font-size: 14px;
+    padding: 4px 8px;
+  }
+
+  &:hover, &.hit {
+    transition: 200ms;
+    background: lightblue;
+  }
+  &.play:hover, &.play.hit {
+    background: lightgreen;
+  }
+  &.stop:hover, &.stop.hit {
+    background: lightcoral;
+  }
+  &.edit:hover {
+    background: lightgray;
+  }
+
+  &:disabled, &[disabled] {
+    opacity: 0.5;
+    background: white !important;
+    color: gray !important;
+    box-shadow: 0 2.8px 2.2px rgba(100, 100, 100, 0.034);
+    cursor: not-allowed;
+  }
+  
+}
+p.error {
+  color: indianred;
+  font-size: 12px;
+}
+
+input.error {
+  border-color: indianred;
+}
+
+.bg-light {
+      background: #fafafa;
+
+}
+.columns {
+  height: 100%;
+  width: 100%;
+  padding: 2em 2em;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  .column {
+    height: 100%;
+    position: relative;
+    padding: 1em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    .list {
+      padding: 1em;
+      display: flex;
+      align-items: flex-start;
+      justify-content: flex-start;
+      flex-direction: column;
+      text-align: left;
+    }
+  }
+  .column.col-2 {
+    flex-basis: calc(8.33% * 2);
+  }
+  .column.col-3 {
+    flex-basis: calc(8.33% * 3);
+  }
+  .column.col-4 {
+    flex-basis: calc(8.33% * 4);
+  }
+  .column.col-5 {
+    flex-basis: calc(8.33% * 5);
+  }
+  .column.col-7 {
+    flex-basis: calc(8.33% * 7);
+  }
+  .column.col-8 {
+    flex-basis: calc(8.33% * 8);
+  }
+  .column.col-9 {
+    flex-basis: calc(8.33% * 9);
+  }
+
+  .column-line {
+    width: 3px;
+    height: 100%;
+    background: #fafafa;
+  }
+}
 
 .modal {
   position: fixed;
@@ -251,9 +453,11 @@ $max_width: 1000px;
   //   left: 0;
   // }
   .modal-content {
-    width: $max_width / 2;
-    height: 600px;
+    max-width: $max_width;
+    width: calc(100vw - 8em);
+    height: calc(100vh - 8em);
     border-radius: 10px;
+    padding: 2em;
 
     position: relative;
     display: flex;
@@ -278,28 +482,21 @@ $max_width: 1000px;
       border: solid #cfcfcf 1px;
       border-radius: 7px;
       width: 50%;
-      input {
-        width: 85%;
-      }
+      // input {
+      //   width: 85%;
+      // }
       &.error {
         border-color: indianred;
       }
     }
-    .btn {
+    .big-btn {
       max-height: 20px;
-      width: 33%;
+      // width: 33%;
+      // width: 75%;
       font-size: 20px;
+      padding: 0.3em 1em;
       // align-self: flex-end;
     }
   }
-}
-
-p.error {
-  color: indianred;
-  font-size: 12px;
-}
-
-input.error {
-  border-color: indianred;
 }
 </style>

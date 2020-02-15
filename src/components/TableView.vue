@@ -6,7 +6,7 @@
       </thead>
       <tbody>
         <tr :class="{active: row.active}" v-for="(row,i) in dataRows" :key="i">
-          <td :rowspan="!i?3:1" v-if="!i||i>=3" style="background: white; width: 200px;border: none">
+          <td :rowspan="!i?2:1" v-if="!i||i>=2" style="background: white; width: 200px;border: none">
             <div class="thumbnail" v-if="i==0">
               <div class="scaler">
                 <slot/>
@@ -33,29 +33,39 @@
               @blur="$socket.emit('saveSession', dbSet);"
             >
           </td>
-          <td class="action-btns">
-            <div v-if="row.active" >
-              <button 
-                class="btn btn-success" 
-                @click="$socket.emit('data', {event: event+'_play'})"
-              >Play</button>
-              <button v-if="row.active" 
-                class="btn btn-error" 
-                @click="$socket.emit('data', {event: event+'_stop'})"
-              >Stop</button>
-              <button class="btn" @click="inOut(row.out)">In-Out</button>
-              <input v-model="row.out" type="number" style="width: 2em;" @keyup="
-                $socket.emit('data', {event: event+'_update', data: currentRow})"
-              > s
-            </div>
-          </td>
           <td><i class="icon icon-cross" @click="dataRows.splice(i,1)"></i></td>
         </tr>
         <tr>
-          <td v-if="dataRows.length > 2" style="border: none"></td>
-          <td colspan="8">
+          <td v-if="dataRows.length >= 2" style="border: none"></td>
+          <td>
             <button class="btn" @click="addDataRow()" style="">New</button>
           </td>
+          <td colspan="4">
+            <div class="action-btns">
+              <button class="btn big-btn btn-success" @click="$socket.emit('data', {event: event+'_play'})">
+                Play
+              </button>
+              <button class="btn big-btn btn-error" @click="$socket.emit('data', {event: event+'_stop'})">
+                Stop
+              </button>
+              <button class="btn big-btn" @click="inOut(out)">
+                In-Out
+              </button>
+              <input class="input-small" v-model="out" type="number" @keyup="
+                $socket.emit('data', {event: event+'_update', data: currentRow})">
+              <span>s</span>
+              <div class="spacer"></div>
+              <div class="input-group" style="width: 100px;">
+                <small class="input-group-addon">Layer</small>
+                <input type="text" class="form-input input-small">
+              </div>
+              <div class="input-group" style="width: 90px;">
+                <small class="input-group-addon">Channel</small>
+                <input type="text" class="form-input input-small">
+              </div>
+            </div>
+          </td>
+          
         </tr>
       </tbody>
     </table>
@@ -71,7 +81,8 @@ export default {
   data () {
     return {
       dataRows: [],
-      current: -1
+      current: -1,
+      out: 6
     }
   },
   created(){
@@ -161,6 +172,7 @@ small {
 
 input, textarea {
   width: 100%;
+  min-width: 120px;
   box-sizing: border-box;
   border: none;
   border-radius: 7px;
@@ -179,16 +191,76 @@ input[type="number"] {
     -moz-appearance: textfield;
 }
 
-// .btn {
-//   font-size: 0.8rem;
-//   height: 1.4rem;
-//   padding: 0.1rem 0.5rem;
-// }
+.input-small {
+  width: 2em; 
+  min-width: 2em;
+  max-width: 3em;
+}
+
+
+.big-btn {
+  margin: 10px;
+  min-width: 50px;
+  max-height: 40px;
+  min-height: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  transition: 500ms;
+  background: white;
+  cursor: pointer;
+
+  code {
+    color: gray;
+  }
+
+  &:hover, &.hit {
+    transition: 200ms;
+    background: lightblue;
+  }
+  &.play:hover, &.play.hit {
+    background: lightgreen;
+  }
+  &.stop:hover, &.stop.hit {
+    background: lightcoral;
+  }
+
+  &:disabled, &[disabled] {
+    opacity: 0.5;
+    background: white !important;
+    color: gray !important;
+    box-shadow: 0 2.8px 2.2px rgba(100, 100, 100, 0.034);
+    cursor: not-allowed;
+  }
+  
+}
 
 .action-btns {
-  width: 250px;
+  padding: 1em 0;
+  // width: 192px;
+  height: 50px;
+
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-direction: row;
+  flex-wrap: wrap;
   button, input {
-    margin: 0 5px;
+    flex-basis: 70px;
+    margin: 0 10px 0 0;
+    width: auto;
+    // flex-grow: 1;
+    text-align: center;
+  }
+  input {
+    flex-basis: 35px;
+  }
+  span {
+    flex-basis: 35px;
+  }
+  .spacer {
+    flex-grow: 1;
   }
 }
 
