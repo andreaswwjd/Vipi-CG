@@ -219,8 +219,8 @@ textarea.form-input {
       border-color: $primary-color;
     }
     &:checked + .form-icon {
-      background: $primary-color;
-      border-color: $primary-color;
+      background: $success-color;
+      border-color: $success-color;
     }
   }
 

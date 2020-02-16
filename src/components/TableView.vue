@@ -51,17 +51,16 @@
               <button class="btn big-btn" @click="inOut(out)">
                 In-Out
               </button>
-              <input class="input-small" v-model="out" type="number" @keyup="
-                $socket.emit('data', {event: event+'_update', data: currentRow})">
+              <input class="input-small" v-model="out" type="number">
               <span>s</span>
               <div class="spacer"></div>
               <div class="input-group" style="width: 100px;">
                 <small class="input-group-addon">Layer</small>
-                <input type="text" class="form-input input-small">
+                <input type="text" class="form-input input-small" v-model="layer">
               </div>
               <div class="input-group" style="width: 90px;">
                 <small class="input-group-addon">Channel</small>
-                <input type="text" class="form-input input-small">
+                <input type="text" class="form-input input-small" v-model="channel">
               </div>
             </div>
           </td>
@@ -77,7 +76,7 @@ import { setTimeout } from 'timers';
 
 export default {
   name: 'tableview',
-  props: ['event', 'placeholders', 'title'],
+  props: ['event', 'placeholders', 'title', 'channel', 'layer'],
   data () {
     return {
       dataRows: [],

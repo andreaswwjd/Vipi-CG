@@ -1,46 +1,56 @@
 <template>
   <div class="control-panel">
 
-    <div class="buttons">
-      <div>
-        <h2>Screen</h2>
-        <div class="btn-group btn-group-block">
-          <input class="input form-input" v-model="bg">
-          <div class="transparent-bg" :style="{background: bg != 'transparent' ? bg : ''}" style="width: 30px; height: 30px; border-radius: 50%;"></div>
-          <button class="btn" @click="setBg(bg)">Set color</button>
-        </div>
-      </div>
+    <div></div>
+    <button class="settings btn flexbox row" style="border: none;" @click="settingsModalIsOpen = true">
+      <i class="icon icon-apps" style="margin-right:2px;"></i>
+      <span>Settings</span>
+    </button>
 
-      <div>
-        <h2>Stop All</h2>
-        <div class="btn-group btn-group-block">
-          <button class="btn" @click="stopAll()">Stop all</button>
-        </div>
-      </div>
-
-    </div>  
-
-
-    <div class="control" v-for="control in controls" :key="control.event">
+    <div class="space"></div>
+    <div class="control" v-for="control in activeControls" :key="control.event">
       <TableView v-bind="control">
         <component :is="control.component" :class="{active: tick}"/>
       </TableView>
     </div>
+    <div class="add-control">
+      <div class="big-btn box" @click="templateModalIsOpen = !templateModalIsOpen">Add template</div>
+    </div>
+    <div class="space"></div>
 
-    <div class="modal" :class="{open: modalIsOpen}">
+    <div class="modal" :class="{open: templateModalIsOpen}">
       <div class="backgropp"></div>
       <div class="modal-content box shadow">
-        <div class="columns">
-          <div class="column col-4 bg-light">
+        <div class="close" @click="templateModalIsOpen = false;">&times;</div>
+        <h1 class="title">Pick your favorites!</h1>
+        <div class="grid">
+          <div class="item" v-for="template in controls" :key="'temp'+template.component" @click="template.active = true" :class="{disabled: template.active}">
+            <div class="thumbnail">
+              <div class="scaler">
+                <component :is="template.component" :class="{active: tick}"/>
+              </div>
+            </div>
+            <h2 class="title">{{ template.title }}</h2>
+            <div class="close" @click.stop="template.active = false">&times;</div>
+          </div>
+        </div>
+        <div class="box shadow big-btn" @click="templateModalIsOpen = false;">Done</div>
+      </div>
+    </div>
+
+
+    <div class="modal" :class="{open: sessionModalIsOpen}">
+      <div class="backgropp"></div>
+      <div class="modal-content box shadow" style="width: 600px;">
+          <!-- <div class="column col-4 bg-light">
             <h2>Saved sessions</h2>
             <div class="list">
-              <p class="box big-btn shadow" v-for="session in ['Söndag morgonmöte', 'Söndagsgudstjänst', 'Måndag']">
+              <p class="box big-btn shadow" v-for="session in ['Söndag morgonmöte', 'Söndagsgudstjänst', 'Måndag']" :key="session">
                 {{session}}
               </p>
             </div>
-          </div>
-          <div class="column col-8">
-            <div class="close" @click="modalIsOpen = false;">&times;</div>
+          </div> -->
+            <div class="close" @click="sessionModalIsOpen = false;">&times;</div>
             <img src="@/assets/new.png" style="width: 25%;">
             <h1>Give me a name!</h1>
             <div class="input" :class="{error}">
@@ -48,6 +58,49 @@
             </div>
             <p v-if="error" class="error">{{error}}</p>
             <div class="big-btn box shadow" @click="newSession(newSessionName)">Create session</div>
+      </div>
+    </div>
+
+    <div class="modal" :class="{open: settingsModalIsOpen}">
+      <div class="backgropp"></div>
+      <div class="modal-content box shadow">
+        <div class="close" @click="settingsModalIsOpen = false;">&times;</div>
+        <h1 class="title">Settings</h1>
+        <div class="columns" style="overflow: scroll;">
+          <div class="column col-5">
+            <h2>Screen</h2>
+            <input class="input form-input" style="width: 100px;" v-model="bg">
+            <div class="btn-group btn-group-block">
+              <div class="transparent-bg" :style="{background: bg != 'transparent' ? bg : ''}" style="width: 30px; height: 30px; margin: 0;"></div>
+              <button class="btn" @click="setBg(bg)">Set color</button>
+            </div>
+
+
+            <div>
+              <h2>Stop All</h2>
+              <div class="btn-group btn-group-block">
+                <button class="btn" @click="stopAll()">Stop all</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="column col-4 bg-light">
+            <h2>Saved sessions</h2>
+            <div class="list">
+              <p class="box big-btn shadow" v-for="session in ['Söndag morgonmöte', 'Söndagsgudstjänst', 'Måndag']" :key="session">
+                {{session}}
+              </p>
+              <!-- <p class="box big-btn shadow">
+                <input id="new_session_input" placeholder="Name" style="width: 100%; border: none;">
+              </p> -->
+            </div>
+
+            <div>
+              <h2>New session</h2>
+              <div class="btn-group btn-group-block">
+                <button class="btn" @click="settingsModalIsOpen = false; sessionModalIsOpen = true">Create</button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -76,7 +129,9 @@ export default {
       bg: 'transparent',
       newSessionName: '',
       error: '',
-      modalIsOpen: true,
+      sessionModalIsOpen: false,
+      templateModalIsOpen: false,
+      settingsModalIsOpen: false,
       db: {
         title: [],
         tema: [],
@@ -108,6 +163,11 @@ export default {
       //     stop: 0
       //   }]
       // ]
+    }
+  },
+  computed: {
+    activeControls() {
+      return this.controls.filter(c=>c.active)
     }
   },
   created () {
@@ -161,7 +221,7 @@ export default {
       // this.edit = true
       // this.error = ''
       // this.newSessionName = ''
-      // this.modalIsOpen = false
+      // this.sessionModalIsOpen = false
       // this.song_nr = this.songs.length - 1
     }
   },
@@ -183,7 +243,10 @@ export default {
 @import "../assets/spectre/_mixins";
 @import "../assets/spectre/_buttons";
 @import "../assets/spectre/_forms";
-// @import "../assets/spectre/_layout";
+
+@import "../assets/spectre/spectre-icons";
+
+$primary-color: lightgreen;
 
 @font-face {
   font-family: Josefin Sans;
@@ -239,10 +302,36 @@ $max_width: 1000px;
   padding: 4em;
 }
 .control {
-  width: 100%;
+  min-width: 850px;
   max-width: $max_width;
   margin: 10px auto;
   display: block;
+}
+.add-control {
+  width: 100%;
+  height: 192px;
+  max-width: $max_width;
+  margin: 10px auto;
+  display: block;
+  border-radius: $unit-7;
+  background: #fafafa;
+  margin: 4em 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  &:hover {
+    background: #f3f3f3;
+    .big-btn {
+      @extend .shadow;
+    }
+  }
+}
+.space {
+  width: 100%;
+  height: 90px;
+  max-width: $max_width;
+
 }
 
 .slider {
@@ -301,6 +390,20 @@ $max_width: 1000px;
     0 6.7px 5.3px rgba(100, 100, 100, 0.048),
     0 22.3px 17.9px rgba(100, 100, 100, 0.072);
 
+}
+
+.flexbox {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  &.row {
+    flex-direction: row;
+  }
+}
+.settings {
+  position: absolute;
+  top: 2em;
+  right: 2em;
 }
 
 .big-btn {
@@ -445,17 +548,11 @@ input.error {
     opacity: 1;
     pointer-events: initial;
   }
-  // .backdrop {
-  //   position: absolute;
-  //   top: 0;
-  //   bottom: 0;
-  //   right: 0;
-  //   left: 0;
-  // }
   .modal-content {
     max-width: $max_width;
     width: calc(100vw - 8em);
-    height: calc(100vh - 8em);
+    height: calc(100vh - 10em);
+    // height: auto;
     border-radius: 10px;
     padding: 2em;
 
@@ -482,21 +579,150 @@ input.error {
       border: solid #cfcfcf 1px;
       border-radius: 7px;
       width: 50%;
-      // input {
-      //   width: 85%;
-      // }
       &.error {
         border-color: indianred;
       }
     }
     .big-btn {
       max-height: 20px;
-      // width: 33%;
-      // width: 75%;
       font-size: 20px;
       padding: 0.3em 1em;
-      // align-self: flex-end;
+    }
+
+    .grid {
+      background: #fff;
+      overflow: scroll;
+      width: calc((240px + 2em) * 2);
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      flex-direction: row;
+      flex-wrap: wrap;
+      @media screen and (min-width: 880px) {
+        &.grid {
+          width: calc((240px + 2em) * 3 );
+        }
+      }
+      .item {
+        position: relative;
+        flex: 192px 0 0;
+        max-width: 192px;
+        margin: 1em;
+        padding: 1em;
+        border-radius: $unit-3;
+        
+        opacity: 1;
+        transition: 1s;
+        // transform-origin: 50% 100%;
+
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        flex-direction: column;
+
+        .title {
+          text-align: center;
+          width: 100%;
+          height: 10px;
+        }
+
+
+        &:hover {
+          transition: 200ms;
+          background: #fafafa;
+          // transform: scale(1.1);
+
+          .title {
+            opacity: 0.5;
+          }
+
+          .thumbnail {
+            opacity: 0.5;
+            transition: 200ms;
+            transform: scale(0.95);
+          }
+
+          &:after {
+            content: '\FF0B';
+            @extend .shadow;
+            @extend .box;
+            position: absolute;
+            padding: .7em;
+            height: 0;
+            width: 0;
+            border-radius: 1000px;
+            background: white;
+            color: lightgreen;
+            font-size: 3em;
+            font-weight: 900;
+            vertical-align: middle;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+          }
+        }
+
+        .close {
+          display: none;
+        }
+        &.disabled {
+          opacity: 0.5;
+          background: white;
+          border: 3px solid lightgreen;
+          &:hover {
+            &::after {
+              content: none;
+            }
+            .close {
+              display: block;
+            }
+          }
+          &::before {
+            content: 'ACTIVE';
+            position: absolute;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: green;
+            font-weight: 900;
+          }
+          .thumbnail {
+            transform: initial;
+            opacity: 0.5;
+          }
+          .title {
+            opacity: 0.5;
+          }
+        }
+
+        .thumbnail {
+          width: 192px;
+          height: 108px;
+          overflow: hidden;
+          position: relative;
+          background: #eee url('data:image/svg+xml,\
+          <svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" fill-opacity=".05" >\
+              <rect x="200" width="200" height="200" />\
+              <rect y="200" width="200" height="200" />\
+            </svg>');
+          background-size: 10px 10px;
+          border-radius: $unit-3;
+          border: 18px white solid;
+          transition: 1s;
+
+          .scaler {
+            width: 1920px;
+            height: 1080px;
+            transform: scale(0.1);
+            transform-origin: top left;
+          }
+        }
+      }
     }
   }
 }
+
+
+
 </style>

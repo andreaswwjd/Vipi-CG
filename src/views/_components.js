@@ -8,10 +8,13 @@ for (let i in components) {
 
 // Exports
 export default components
-export const controls = Object.keys(templates).map(name=>({
+export const controls = Object.keys(templates).map((name, i)=>({
   // Corresponds to fields injected in '@/components/TableView' inside the Control-view.
   title: templates[name].title || name,
   placeholders: templates[name].placeholders,
   event: name, 
-  component: name
+  component: name, 
+  active: false, 
+  channel: 1,
+  layer: 700 + i
 }))

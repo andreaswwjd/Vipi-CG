@@ -41,12 +41,12 @@ export default {
     title: 'Titel (fullskärm)',
     placeholders: { f0:'Rubrik', f1:'Tema', f2:'etc.' },
   },
+  */
   EFS_Bibelord: {
     component: () => import('./EFS/Bibelord'),
     title: 'Bibelord',
     placeholders: { f0:'Text', f1:'Referens' },
   },
-  */
   FKAB_Namnskylt: {
     component: () => import('./FKAB/Namnskylt'),
     title: 'Namnskylt (FKAB)',
