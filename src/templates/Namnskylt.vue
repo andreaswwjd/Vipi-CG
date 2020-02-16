@@ -14,7 +14,7 @@
 export default {
   data() {
     return {
-      comp: 'namnskylt',
+      comp: 'Namnskylt',
       f0: 'Andreas Lundström',
       f1: 'Filmproducent',
       active: false
