@@ -37,27 +37,30 @@ const serve = async app => {
   io.on('connection', client => {
     console.log('Client connected!')
     
+    // Session load
     client.on('ready', () => { 
       io.sockets.emit('lastSession', session)
     });
   
-  
-    client.on('saveSession', (data) => { 
+    // Session save
+    client.on('saveSession', data => { 
       session[data.key] = data.value
       fs.writeFileSync('session.txt', JSON.stringify(session))
     });
 
-    client.on('connect', ({host, port}) =>{
+    // Producer connect
+    client.on('connect', {host, port} =>{
       if (host) cgHost = host
       if (port) cgPort = port
       connect()
     })
 
+    // Producer add
     client.on('add', options =>{
       addTemplate(options)
     })
   
-  
+    // Library list & load
     client.on('getSongs', () => { 
 
       const filenames = fs.readdirSync(path.dirname(process.execPath))
@@ -67,12 +70,14 @@ const serve = async app => {
 
     });
   
+    // Library save
     client.on('saveSong', (song) => { 
       console.log('Saving '+song.file)
       fs.writeFileSync(path.join(path.dirname(process.execPath), song.file), song.f0+'\n'+song.f1+'\n'+song.f2+'\n')
     });
 
-    client.on('data', ({event, data, channel = 1, layer = 700, flashLayer = 1, playOnLoad = 0}) => {
+    // Client
+    client.on('data', {event, data, channel = 1, layer = 700, flashLayer = 1, playOnLoad = 0} => {
       // TODO: Make this work with any template
       // BUG: Now every time a control-client plays any template, the template added will be affected as well...
       // FIX: Make control-client define layer and channel!
@@ -137,9 +142,7 @@ const serve = async app => {
   
 }
 
-// Templates
-
-// Add template
+// Producer add
 const addTemplate = async ({
   templateName, 
   channel = 1, 
@@ -183,7 +186,7 @@ const addTemplate = async ({
 
 }
 
-// Songfiles
+// Library change
 fs.watch(path.dirname(process.execPath), (event, filename)=>{
   // console.log(event, filename)
   if(event == 'change' && /.*\.txt$/.test(filename) && filename != 'session.txt') {
