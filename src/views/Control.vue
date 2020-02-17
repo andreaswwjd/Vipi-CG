@@ -239,6 +239,8 @@ export default {
 
 <style lang="scss" scoped>
 
+@import "../assets/style/global";
+
 @import "../assets/spectre/_variables";
 @import "../assets/spectre/_mixins";
 @import "../assets/spectre/_buttons";
@@ -376,157 +378,157 @@ $max_width: 1000px;
 
 
 
-.box {
-  box-shadow: 0 2.8px 2.2px rgba(100, 100, 100, 0.034);
+// .box {
+//   box-shadow: 0 2.8px 2.2px rgba(100, 100, 100, 0.034);
 
-  padding: 15px;
-  background: white;
-  border-radius: 5px;
-}
+//   padding: 15px;
+//   background: white;
+//   border-radius: 5px;
+// }
 
-.shadow {
-  box-shadow:
-    0 2.8px 2.2px rgba(100, 100, 100, 0.034),
-    0 6.7px 5.3px rgba(100, 100, 100, 0.048),
-    0 22.3px 17.9px rgba(100, 100, 100, 0.072);
+// .shadow {
+//   box-shadow:
+//     0 2.8px 2.2px rgba(100, 100, 100, 0.034),
+//     0 6.7px 5.3px rgba(100, 100, 100, 0.048),
+//     0 22.3px 17.9px rgba(100, 100, 100, 0.072);
 
-}
+// }
 
-.flexbox {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  &.row {
-    flex-direction: row;
-  }
-}
+// .flexbox {
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+//   &.row {
+//     flex-direction: row;
+//   }
+// }
 .settings {
   position: absolute;
   top: 2em;
   right: 2em;
 }
 
-.big-btn {
-  margin: 10px;
-  flex-basis: 33%;
-  min-width: 150px;
-  max-height: 50px;
-  min-height: 50px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  transition: 500ms;
-  background: white;
-  cursor: pointer;
+// .big-btn {
+//   margin: 10px;
+//   flex-basis: 33%;
+//   min-width: 150px;
+//   max-height: 50px;
+//   min-height: 50px;
+//   display: flex;
+//   flex-direction: column;
+//   justify-content: center;
+//   align-items: center;
+//   transition: 500ms;
+//   background: white;
+//   cursor: pointer;
 
-  code {
-    color: gray;
-  }
+//   code {
+//     color: gray;
+//   }
 
-  &.edit {
-    min-width: 50px;
-    min-height: initial;
-    position: absolute;
-    top: 15px;
-    right: 0;
-    border: lightcoral solid 1px;
-    border-radius: 50px;
-    box-shadow: 0 2.8px 2.2px rgba(100, 100, 100, 0.034);
-    font-size: 14px;
-    padding: 4px 8px;
-  }
+//   &.edit {
+//     min-width: 50px;
+//     min-height: initial;
+//     position: absolute;
+//     top: 15px;
+//     right: 0;
+//     border: lightcoral solid 1px;
+//     border-radius: 50px;
+//     box-shadow: 0 2.8px 2.2px rgba(100, 100, 100, 0.034);
+//     font-size: 14px;
+//     padding: 4px 8px;
+//   }
 
-  &:hover, &.hit {
-    transition: 200ms;
-    background: lightblue;
-  }
-  &.play:hover, &.play.hit {
-    background: lightgreen;
-  }
-  &.stop:hover, &.stop.hit {
-    background: lightcoral;
-  }
-  &.edit:hover {
-    background: lightgray;
-  }
+//   &:hover, &.hit {
+//     transition: 200ms;
+//     background: lightblue;
+//   }
+//   &.play:hover, &.play.hit {
+//     background: lightgreen;
+//   }
+//   &.stop:hover, &.stop.hit {
+//     background: lightcoral;
+//   }
+//   &.edit:hover {
+//     background: lightgray;
+//   }
 
-  &:disabled, &[disabled] {
-    opacity: 0.5;
-    background: white !important;
-    color: gray !important;
-    box-shadow: 0 2.8px 2.2px rgba(100, 100, 100, 0.034);
-    cursor: not-allowed;
-  }
+//   &:disabled, &[disabled] {
+//     opacity: 0.5;
+//     background: white !important;
+//     color: gray !important;
+//     box-shadow: 0 2.8px 2.2px rgba(100, 100, 100, 0.034);
+//     cursor: not-allowed;
+//   }
   
-}
-p.error {
-  color: indianred;
-  font-size: 12px;
-}
+// }
+// p.error {
+//   color: indianred;
+//   font-size: 12px;
+// }
 
-input.error {
-  border-color: indianred;
-}
+// input.error {
+//   border-color: indianred;
+// }
 
 .bg-light {
       background: #fafafa;
 
 }
-.columns {
-  height: 100%;
-  width: 100%;
-  padding: 2em 2em;
+// .columns {
+//   height: 100%;
+//   width: 100%;
+//   padding: 2em 2em;
 
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: row;
-  .column {
-    height: 100%;
-    position: relative;
-    padding: 1em;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    .list {
-      padding: 1em;
-      display: flex;
-      align-items: flex-start;
-      justify-content: flex-start;
-      flex-direction: column;
-      text-align: left;
-    }
-  }
-  .column.col-2 {
-    flex-basis: calc(8.33% * 2);
-  }
-  .column.col-3 {
-    flex-basis: calc(8.33% * 3);
-  }
-  .column.col-4 {
-    flex-basis: calc(8.33% * 4);
-  }
-  .column.col-5 {
-    flex-basis: calc(8.33% * 5);
-  }
-  .column.col-7 {
-    flex-basis: calc(8.33% * 7);
-  }
-  .column.col-8 {
-    flex-basis: calc(8.33% * 8);
-  }
-  .column.col-9 {
-    flex-basis: calc(8.33% * 9);
-  }
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+//   flex-direction: row;
+//   .column {
+//     height: 100%;
+//     position: relative;
+//     padding: 1em;
+//     display: flex;
+//     justify-content: center;
+//     align-items: center;
+//     flex-direction: column;
+//     .list {
+//       padding: 1em;
+//       display: flex;
+//       align-items: flex-start;
+//       justify-content: flex-start;
+//       flex-direction: column;
+//       text-align: left;
+//     }
+//   }
+//   .column.col-2 {
+//     flex-basis: calc(8.33% * 2);
+//   }
+//   .column.col-3 {
+//     flex-basis: calc(8.33% * 3);
+//   }
+//   .column.col-4 {
+//     flex-basis: calc(8.33% * 4);
+//   }
+//   .column.col-5 {
+//     flex-basis: calc(8.33% * 5);
+//   }
+//   .column.col-7 {
+//     flex-basis: calc(8.33% * 7);
+//   }
+//   .column.col-8 {
+//     flex-basis: calc(8.33% * 8);
+//   }
+//   .column.col-9 {
+//     flex-basis: calc(8.33% * 9);
+//   }
 
-  .column-line {
-    width: 3px;
-    height: 100%;
-    background: #fafafa;
-  }
-}
+//   .column-line {
+//     width: 3px;
+//     height: 100%;
+//     background: #fafafa;
+//   }
+// }
 
 .modal {
   position: fixed;

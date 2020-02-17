@@ -132,6 +132,7 @@ export default {
 <style lang="scss" src="../assets/spectre/spectre-icons.scss" scoped></style-->
 
 <style lang="scss" scoped>
+@import "../assets/style/global";
 
 @import "../assets/spectre/_variables";
 @import "../assets/spectre/_mixins";
@@ -147,54 +148,54 @@ $max_width: 1000px;
 }
 // @import "../assets/spectre/_typography";
 
-@font-face {
-  font-family: Josefin Sans;
-  src: url(../fonts/JosefinSans/JosefinSans-Regular.ttf);
-}
-@font-face {
-  font-family: Josefin SemiBold;
-  src: url(../fonts/JosefinSans/JosefinSans-SemiBold.ttf);
-}
+// @font-face {
+//   font-family: Josefin Sans;
+//   src: url(../fonts/JosefinSans/JosefinSans-Regular.ttf);
+// }
+// @font-face {
+//   font-family: Josefin SemiBold;
+//   src: url(../fonts/JosefinSans/JosefinSans-SemiBold.ttf);
+// }
 
-h1, h2, h3, h4, h5, h6, button {
-  font-family: Josefin SemiBold, Helvetica, Arial, sans-serif;
-}
+// h1, h2, h3, h4, h5, h6, button {
+//   font-family: Josefin SemiBold, Helvetica, Arial, sans-serif;
+// }
 
-p, input, textarea, label, small {
-  font-family: Josefin Sans;
-}
+// p, input, textarea, label, small {
+//   font-family: Josefin Sans;
+// }
 
-small {
-  font-size: 0.7em;
-  // text-transform: uppercase;
-}
+// small {
+//   font-size: 0.7em;
+//   // text-transform: uppercase;
+// }
 
-input, textarea {
-  width: 100%;
-  min-width: 120px;
-  box-sizing: border-box;
-  border: none;
-  border-radius: 7px;
-  line-height: 30px;
-  font-size: 1em;
-  padding: 0 5px 0 5px;
-  border: lightgray solid 1px;
-}
+// input, textarea {
+//   width: 100%;
+//   min-width: 120px;
+//   box-sizing: border-box;
+//   border: none;
+//   border-radius: 7px;
+//   line-height: 30px;
+//   font-size: 1em;
+//   padding: 0 5px 0 5px;
+//   border: lightgray solid 1px;
+// }
 
-input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-}
+// input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-inner-spin-button {
+//     -webkit-appearance: none;
+//     margin: 0;
+// }
  
-input[type="number"] {
-    -moz-appearance: textfield;
-}
+// input[type="number"] {
+//     -moz-appearance: textfield;
+// }
 
-.input-small {
-  width: 2em; 
-  min-width: 2em;
-  max-width: 3em;
-}
+// .input-small {
+//   width: 2em; 
+//   min-width: 2em;
+//   max-width: 3em;
+// }
 
 
 .big-btn {
@@ -264,23 +265,23 @@ input[type="number"] {
 }
 
 
-.thumbnail {
-  width: 192px;
-  height: 108px;
-  overflow: hidden;
-  position: relative;
-  background: #eee url('data:image/svg+xml,\
-   <svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" fill-opacity=".05" >\
-      <rect x="200" width="200" height="200" />\
-      <rect y="200" width="200" height="200" />\
-    </svg>');
-  background-size: 10px 10px;
+// .thumbnail {
+//   width: 192px;
+//   height: 108px;
+//   overflow: hidden;
+//   position: relative;
+//   background: #eee url('data:image/svg+xml,\
+//    <svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" fill-opacity=".05" >\
+//       <rect x="200" width="200" height="200" />\
+//       <rect y="200" width="200" height="200" />\
+//     </svg>');
+//   background-size: 10px 10px;
 
-  .scaler {
-    width: 1920px;
-    height: 1080px;
-    transform: scale(0.1);
-    transform-origin: top left;
-  }
-}
+//   .scaler {
+//     width: 1920px;
+//     height: 1080px;
+//     transform: scale(0.1);
+//     transform-origin: top left;
+//   }
+// }
 </style>
