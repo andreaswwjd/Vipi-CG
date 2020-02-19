@@ -1,22 +1,32 @@
 // TODO:
 // Separate songtemplate logic to separate file.
 
+// Network
 const express = require('express')
 const app = express()
-const server = require('http').createServer(app);
-const io = require('socket.io')(server);
+const server = require('http').createServer(app)
+const io = require('socket.io')(server)
+
+// System
 const path = require('path')
-const fs = require("fs-extra");
+const fs = require('fs-extra')
+const ip = require('ip')
+
+const ipAddress = ip.address()
 const port = 3000
 
-var ip = require('ip');
-ipAddress = ip.address()
-const { CasparCG } = require("casparcg-connection");
-
 // CasparCG connection
+const { CasparCG } = require('casparcg-connection')
 var connection = undefined
 var cgHost = 'localhost'
 var cgPort = '5250'
+
+// Handlers
+const { sessionHandler  } = require('./handlers/sessionHandler')
+const { libraryHandler  } = require('./handlers/libraryHandler')
+const { producerHandler } = require('./handlers/producerHandler')
+const { clientHandler   } = require('./handlers/clientHandler')
+
 
 const connect = async ()=>{
   connection = await new CasparCG(cgHost, cgPort);
@@ -37,19 +47,21 @@ const serve = async app => {
   io.on('connection', client => {
     console.log('Client connected!')
     
-    // Session load
-    client.on('ready', () => { 
-      io.sockets.emit('lastSession', session)
-    });
+    // Session
+    sessionHandler(io, client)
+    // // Session load
+    // client.on('ready', () => { 
+    //   io.sockets.emit('lastSession', session)
+    // });
   
-    // Session save
-    client.on('saveSession', data => { 
-      session[data.key] = data.value
-      fs.writeFileSync('session.txt', JSON.stringify(session))
-    });
+    // // Session save
+    // client.on('saveSession', data => { 
+    //   session[data.key] = data.value
+    //   fs.writeFileSync('session.txt', JSON.stringify(session))
+    // });
 
     // Producer connect
-    client.on('connect', {host, port} =>{
+    client.on('connect', ({ host, port }) =>{
       if (host) cgHost = host
       if (port) cgPort = port
       connect()
@@ -77,7 +89,7 @@ const serve = async app => {
     });
 
     // Client
-    client.on('data', {event, data, channel = 1, layer = 700, flashLayer = 1, playOnLoad = 0} => {
+    client.on('data', ({event, data, channel = 1, layer = 700, flashLayer = 1, playOnLoad = 0}) => {
       // TODO: Make this work with any template
       // BUG: Now every time a control-client plays any template, the template added will be affected as well...
       // FIX: Make control-client define layer and channel!
@@ -186,17 +198,17 @@ const addTemplate = async ({
 
 }
 
-// Library change
-fs.watch(path.dirname(process.execPath), (event, filename)=>{
-  // console.log(event, filename)
-  if(event == 'change' && /.*\.txt$/.test(filename) && filename != 'session.txt') {
-    console.log('Uppdating ', filename)
-    const raw = fs.readFileSync(path.join(path.dirname(process.execPath), filename), 'utf8')
-    const song = parse(filename, raw)
+// // Library change
+// fs.watch(path.dirname(process.execPath), (event, filename)=>{
+//   // console.log(event, filename)
+//   if(event == 'change' && /.*\.txt$/.test(filename) && filename != 'session.txt') {
+//     console.log('Uppdating ', filename)
+//     const raw = fs.readFileSync(path.join(path.dirname(process.execPath), filename), 'utf8')
+//     const song = parse(filename, raw)
 
-    io.sockets.emit('song', song)
-  }
-})
+//     io.sockets.emit('song', song)
+//   }
+// })
 
 const parse = (filename, raw) => {
   let splitted = raw.split(/\n|\r/)
