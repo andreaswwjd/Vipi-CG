@@ -33,6 +33,21 @@
       </div>
     </div>
 
+    <div class="column columns" style="min-width: 300px; flex-basis: 300px;">
+      <div class="column col-6 list">
+        <div v-for="event in [
+'library_create',
+'library_list',
+'library_save',
+'library_load',
+'library_rename',
+'library_delete',
+'library_change']" :key="'_'+event">
+          <button class="play big-btn box shadow" @click="$socket.emit(event)">{{ event }}</button>
+        </div>  
+      </div>
+    </div>
+
   </div>
 </template>
 <script>

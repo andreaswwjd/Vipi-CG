@@ -1,13 +1,13 @@
 <template>
   <div style="position: initial; height: 100%; width: 100%; overflow: hidden;">
     <div class="meta" :style="{transform: style.metaTransform || 'translate(192px, 756px)'}">
-      <div class="titel" v-html="f0" v-if="f0 && !style.hideTitle" :style="{
+      <div class="titel" v-html="title" v-if="title && !style.hideTitle" :style="{
         opacity: hide, 
         fontSize: style.fontSize*0.7+'px' || '35px', 
         fontFamily: style.fontFamily ? style.fontFamily + ', Josefin SemiBold' : 'Josefin SemiBold',
         color: style.color || 'white'
       }"></div>
-      <div class="av" v-html="f1" v-if="f1 && !style.hideRights" :style="{
+      <div class="av" v-html="author" v-if="author && !style.hideRights" :style="{
         opacity: hide, 
         fontSize: style.fontSize*0.7+'px' || '35px',
         fontFamily: style.fontFamily ? style.fontFamily + ', Josefin Sans' : 'Josefin Sans',
@@ -47,11 +47,11 @@ export default {
       comp: 'sangplatta',
       count: 0,
       hide: 1,
-      f0: '', // Titel
-      f1: '', // Sångtext
-      f2: '', // Text & Musik
-      // f0: `Stockholm i mitt hjärta`, // Titel
-      // f1: `Stockholm i mitt hjärta
+      title: '', // Titel
+      author: '', // Sångtext
+      text: '', // Text & Musik
+      // title: `Stockholm i mitt hjärta`, // Titel
+      // author: `Stockholm i mitt hjärta
       // låt mig besjunga dig nu
       // åldrad i ungdomlig grönska
       // öarnas stad, det är du!
@@ -113,7 +113,7 @@ export default {
       // är du den stad som fått allt.
       // Genom Mälarens kärlek till havet
       // en blandning av sött och salt.`, // Text
-      // f2: 'Text & musik: Lars Berghagen', // Text & musik
+      // text: 'Text & musik: Lars Berghagen', // Text & musik
       active: false,
       // d: ''
       style: {}
@@ -121,7 +121,7 @@ export default {
   },
   computed: {
     lines(){
-      return this.f2.split(/\n|\r|\/\//)
+      return this.text.split(/\n|\r|\/\//)
     }
   },
   methods: {
@@ -151,11 +151,11 @@ export default {
         if (data.charAt(0) == '<') {
           let parsed = convert.xml2js(data);
           parsed.elements[0].elements.map(d=>{
-            if (d.attributes.id == 'f0') this.f0 = d.elements[0].attributes.value
-            if (d.attributes.id == 'f1') this.f1 = d.elements[0].attributes.value
-            if (d.attributes.id == 'f2') this.f2 = d.elements[0].attributes.value
+            if (d.attributes.id == 'title') this.title = d.elements[0].attributes.value
+            if (d.attributes.id == 'author') this.author = d.elements[0].attributes.value
+            if (d.attributes.id == 'text') this.text = d.elements[0].attributes.value
           })
-          console.log('2a:', this.f2)
+          console.log('2a:', this.text)
           return 
         }
         if (data.charAt(0) == '{') {
@@ -167,29 +167,29 @@ export default {
 
       if (typeof data == 'object') {
         console.log('3:', data)
-        if (data.f0) this.f0 = data.f0
-        if (data.f1) this.f1 = data.f1
-        if (data.f2) this.f2 = data.f2
+        if (data.title) this.title = data.title
+        if (data.author) this.author = data.author
+        if (data.text) this.text = data.text
         if (data.style) this.style = data.style
         if (data.selected != undefined) this.count = data.selected
       } 
-      console.log('4:', this.f2)
+      console.log('4:', this.text)
 
       /*
       <templateData>
-        <componentData id="f0">
+        <componentData id="title">
           <data id="text" value="Bla bla bla"/>
         </componentData>
-        <componentData id="f1">
+        <componentData id="author">
           <data id="text" value="Bla bla bla"/>
         </componentData>
-        <componentData id="f2">
+        <componentData id="text">
           <data id="text" value="Bla bla bla"/>
         </componentData>
       </templateData>
 
 
-      <templateData><componentData id="f0"><data id="text" value="Bla bla bla"/></componentData><componentData id="f1"><data id="text" value="Bla bla bla"/></componentData><componentData id="f2"><data id="text" value="Bla bla bla"/></componentData></templateData>
+      <templateData><componentData id="title"><data id="text" value="Bla bla bla"/></componentData><componentData id="author"><data id="text" value="Bla bla bla"/></componentData><componentData id="text"><data id="text" value="Bla bla bla"/></componentData></templateData>
       */
     }
   },

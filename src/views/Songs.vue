@@ -72,8 +72,8 @@
         <div v-if="current_song" class="box shadow" style="width: 100%; position: relative;">
           <div class="box btn edit" @click="editor()">{{edit ? 'Spara' : 'Redigera'}}</div>
           <div v-if="!edit">
-            <h1>{{current_song.f0}}</h1>
-            <p><strong>{{current_song.f1}}</strong></p>
+            <h1>{{current_song.title}}</h1>
+            <p><strong>{{current_song.author}}</strong></p>
             <p class="line" 
               v-for="(line,i) in lines" 
               :key="line+i" 
@@ -85,9 +85,9 @@
           </div>
 
           <div v-if="current_song && edit">
-            <input class="title" placeholder="Titel" v-model="current_song.f0">
-            <input class="writer" placeholder="Text & musik" v-model="current_song.f1">
-            <textarea id="editor" type="text" v-model="current_song.f2" :style="{height: lines.length * 30+30+'px'}"/>
+            <input class="title" placeholder="Titel" v-model="current_song.title">
+            <input class="writer" placeholder="Text & musik" v-model="current_song.author">
+            <textarea id="editor" type="text" v-model="current_song.text" :style="{height: lines.length * 30+30+'px'}"/>
           </div>
 
         </div>
@@ -169,7 +169,7 @@ export default {
       return this.songs[this.song_nr]
     },
     lines() {
-      return this.current_song.f2.split(/\n|\r/)
+      return this.current_song.text.split(/\n|\r/)
     },
     style() {
       return {
@@ -319,9 +319,9 @@ export default {
 
       this.songs.push({
         file: filename+'.txt',
-        f0: '',
-        f1: '',
-        f2: ''
+        title: '',
+        author: '',
+        text: ''
       })
       this.edit = true
       this.error = ''
@@ -334,13 +334,13 @@ export default {
     songs(songs) {
       this.songs = songs
     },
-    song(song) {
+    text({file, title = '', author = '', text = ''}) {
       this.songs = this.songs.map((s,i)=>{
-        if (s.file == song.file) s = song
+        if (s.file == file) s = {file, title, author, text}
         return s
       })
-      if (!this.songs.find(s => s.file == song.file)) {
-        this.songs.push(song)
+      if (!this.songs.find(s => s.file == file)) {
+        this.songs.push({file, title, author, text})
       }
     }
   },

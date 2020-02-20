@@ -1,8 +1,0 @@
-{
-  "FKAB_Namnskylt": [
-    {
-      "f0": "Frida Nilsson",
-      "f1": "Författare"
-    }
-  ]
-}
