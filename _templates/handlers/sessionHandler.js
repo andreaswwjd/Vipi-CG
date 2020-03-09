@@ -3,6 +3,41 @@ const fs = require('fs-extra')
 module.exports.sessionHandler = function(io, client) {
 
 
+  // /** Session CURRENT
+  //  * @emits session_current To all clients
+  //  */
+  // client.on('session_current', async () => {
+    
+  //   // Make session directory
+  //   let currentSessionName = await fs.readFile(`./sessions/current.txt`, 'utf8')
+  //   currentSessionName = currentSessionName.trim()
+
+  //   // Check if session exists
+  //   if (await fs.pathExists(`./sessions/${currentSessionName}/session.txt`)) {
+
+  //     // Send current session to client
+  //     client.emit('session_current', currentSessionName)
+
+  //     // Set new watcher
+  //     client.watchers.session = await setWatcher(client, currentSessionName)
+  
+  //     // Get session templates
+  //     const templates = await fs.readJSON(`./sessions/${currentSessionName}/session.txt`, 'utf8')
+  //     client.emit('session', { templates })
+
+  //     // Get session texts if exists
+  //     if (await fs.pathExists(`./sessions/${currentSessionName}/texts.txt`)) {
+  //       const textsRaw = await fs.readFile(`./sessions/${currentSessionName}/texts.txt`, 'utf8')
+  //       const texts = textsRaw.split('\n').filter(text=>!!text)
+  //       console.log('LOAD Session: ', {currentSessionName, templates, texts}) // DELETE
+  //       client.emit('session', { texts })
+  //     }
+  //   }
+  // });
+
+
+
+
   /** Session CREATE
    * @param sessionName
    * @emits session_list To all clients
@@ -26,6 +61,9 @@ module.exports.sessionHandler = function(io, client) {
   });
 
 
+
+
+
   /** Session LIST
    * @emits session_list
    */
@@ -35,10 +73,13 @@ module.exports.sessionHandler = function(io, client) {
     let list = await fs.readdir('./sessions')
 
     // Send session list to client
-    client.emit('session_list', list)
+    client.emit('session_list', list.filter(f=>f!='current.txt'))
 
     console.log('LIST Sessions: ', list) // DELETE
   });
+
+
+
 
 
   /** Session LOAD
@@ -55,7 +96,7 @@ module.exports.sessionHandler = function(io, client) {
   
       // Get session templates
       const templates = await fs.readJSON(`./sessions/${sessionName}/session.txt`, 'utf8')
-      client.emit('session', { templates })
+      client.emit('session', { sessionName, templates })
 
       // Get session texts if exists
       if (await fs.pathExists(`./sessions/${sessionName}/texts.txt`)) {
@@ -68,6 +109,9 @@ module.exports.sessionHandler = function(io, client) {
   });
 
 
+
+
+
   /** Session SAVE
    * @param session {sessionName, templates, texts} 
    * @emits session through watcher 
@@ -76,10 +120,13 @@ module.exports.sessionHandler = function(io, client) {
 
     // Overwrite session files
     fs.writeJSON(`./sessions/${sessionName}/session.txt`, templates, {spaces: '  ', EOL: '\n'})
-    fs.writeFile(`./sessions/${sessionName}/texts.txt`, texts.map(text => text.name).join('\n'))
+    if (texts[0]) fs.writeFile(`./sessions/${sessionName}/texts.txt`, texts.map(text => text.name).join('\n'))
 
     console.log('SAVED Session: ', {sessionName, templates, texts}) // DELETE
   });
+
+
+
 
 
   /** Session RENAME
@@ -114,11 +161,14 @@ module.exports.sessionHandler = function(io, client) {
     }
 
     // Broadcast to clients current sessions list.
-    io.sockets.emit('session_list', list)
+    io.sockets.emit('session_list', list.filter(f=>f!='current.txt'))
     
   });
 
   
+
+
+
   /** Session DELETE
    * @param sessionName 
    * @emits session to all clients
@@ -132,7 +182,7 @@ module.exports.sessionHandler = function(io, client) {
 
     // Broadcast session-list to clients
     list = await fs.readdir('./sessions')
-    io.sockets.emit('session_list', list)
+    io.sockets.emit('session_list', list.filter(f=>f!='current.txt'))
 
     console.log('LIST Sessions: ', list) // DELETE
   });
@@ -156,12 +206,12 @@ async function watchSession(client, sessionName) {
 
       if (filename == 'session.txt') {
         const templates = await fs.readJSON(`./sessions/${sessionName}/${filename}`, 'utf8')
-        client.emit('session', { templates })
+        client.emit('session', { sessionName, templates })
       }
 
       if (filename == 'texts.txt') {
         const textsRaw = await fs.readFile(`./sessions/${sessionName}/${filename}`, 'utf8')
-        client.emit('session', { texts: textsRaw.split('\n').filter(text=>!!text) })
+        client.emit('session', { sessionName, texts: textsRaw.split('\n').filter(text=>!!text) })
       }
     }
   })

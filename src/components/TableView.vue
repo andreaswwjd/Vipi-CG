@@ -33,7 +33,8 @@
               @blur="$socket.emit('saveSession', dbSet);"
             >
           </td>
-          <td><i class="icon icon-cross" @click="dataRows.splice(i,1)"></i></td>
+          <!-- <td><i class="icon icon-cross" @click="dataRows.splice(i,1)"></i></td> -->
+          <td><div class="close" @click="dataRows.splice(i,1)">&times;</div></td>
         </tr>
         <tr>
           <td v-if="dataRows.length >= 2" style="border: none"></td>

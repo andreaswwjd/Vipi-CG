@@ -1,16 +1,22 @@
 
-module.exports.producerHandler = function(io, client, connection) {
+// CasparCG connection
+const { CasparCG } = require('casparcg-connection')
+var connection = undefined
+var cgHost = 'localhost'
+var cgPort = '5250'
+
+module.exports.producerHandler = function(io, client) {
 
   // Producer connect
-  client.on('connect', ({ host, port }) =>{
+  client.on('producer_caspar', ({ host, port }) =>{
     if (host) cgHost = host
     if (port) cgPort = port
-    connect()
+    connectToCaspar(cgHost, cgPort)
   })
 
   // Producer add
   client.on('producer_add', async (
-    { templateName, channel = 1, layer = 700, flashLayer = 1, playOnLoad = 0, data = {f0:'', f1:'', f2:''} }
+    { templateName, channel = 1, layer = 700, flashLayer = 1, playOnLoad = 0, data = {} }
   )=>{
   
     // Caspar CG HTML producer
@@ -23,8 +29,6 @@ module.exports.producerHandler = function(io, client, connection) {
       } 
     }
       
-    // Vipi CG producer
-    io.sockets.emit('producer_add', { templateName, channel, layer, flashLayer, playOnLoad, data })
     console.log(`Template "${templateName}" added! (Channel: ${channel} Layer: ${layer})`)
   
   })
@@ -88,3 +92,34 @@ module.exports.producerHandler = function(io, client, connection) {
   });
   
 }
+
+
+const connectToCaspar = async function(host = cgHost, port = cgPort) {
+  connection = await new CasparCG(host, port);
+
+  connection.onConnected = async () => {
+    console.log(`CasparCG connected on ${host}:${port}!`)
+    // addTemplate({templateName: 'Sangplatta'})
+    let CGPaths = await connection.getCasparCGPaths();
+
+    if (CGPaths.template) {
+      
+      // Copy template to Caspar templates folder
+      let template = path.join(path.dirname(process.execPath), templateName)
+      let templatesFolder = path.join(CGPaths.template, '_VipiCG/')
+      try {
+        await fs.mkdir(templatesFolder)
+        await fs.copy(template, templatesFolder);
+      } catch(err) {
+        if (err) {
+          console.log(`
+    Could not copy templates to the Caspar CG template directory! 
+    Be shore to have the templates in the same directory as the program!
+    `); 
+        } 
+      }
+    }
+  }
+}
+
+module.exports.connectToCaspar = connectToCaspar

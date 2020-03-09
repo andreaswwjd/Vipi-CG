@@ -1,6 +1,140 @@
 <template>
   <div class="control-panel">
 
+    <div>
+      <h1>{{ session.sessionName }}</h1>
+    </div>
+    <button class="settings btn flexbox row" style="border: none;" @click="settingsModalIsOpen = true">
+      <i class="icon icon-apps" style="margin-right:2px;"></i>
+      <span>Settings</span>
+    </button>
+
+    <div class="space"></div>
+    <div class="control" v-for="control in activeControls" :key="control.event">
+      <TableView v-bind="control">
+        <component :is="control.component" :class="{active: tick}"/>
+      </TableView>
+    </div>
+    <div class="add-control">
+      <div class="big-btn box" @click="templateModalIsOpen = !templateModalIsOpen">Add template</div>
+    </div>
+    <div class="space"></div>
+
+    <!-- Add templates panel -->
+    <div class="modal" :class="{open: templateModalIsOpen}">
+      <div class="backgropp"></div>
+      <div class="modal-content box shadow">
+        <div class="close" @click="templateModalIsOpen = false;">&times;</div>
+        <h1 class="title">Pick your favorites!</h1>
+        <div class="grid">
+          <div class="item" v-for="template in controls" :key="'temp'+template.component" @click="addTemplate(template)" :class="{disabled: sessionHasTemplate(template)}">
+            <div class="thumbnail">
+              <div class="scaler">
+                <component :is="template.component" :class="{active: tick}"/>
+              </div>
+            </div>
+            <h2 class="title">{{ template.title }}</h2>
+            <div class="close" @click.stop="removeTemplate(template)">&times;</div>
+          </div>
+        </div>
+        <div class="box shadow big-btn" @click="templateModalIsOpen = false;">Done</div>
+      </div>
+    </div>
+
+    <!-- Load Session Panel -->
+    <div class="modal" :class="{open: !session.sessionName}">
+      <div class="backgropp"></div>
+      <div class="modal-content box shadow" style="width: 600px;">
+        <div class="column col-4 bg-light" style="padding: 2em;">
+          <h2 style="text-align: center" v-if="session_list[0]">Load session</h2>
+          <div class="list">
+            <p class="box big-btn shadow" v-for="sessionName in session_list" :key="sessionName" @click="$socket.emit('session_load', sessionName)">
+              {{ sessionName }}
+            </p>
+            <!-- <p class="box big-btn shadow">
+              <input id="new_session_input" placeholder="Name" style="width: 100%; border: none;">
+            </p> -->
+          </div>
+
+          <div>
+            <h2 style="text-align: center">Create a new session</h2>
+            <div class="btn-group btn-group-block">
+              <button class="btn" @click="settingsModalIsOpen = false; sessionModalIsOpen = true">Create</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Create Session Panel -->
+    <div class="modal" :class="{open: sessionModalIsOpen}">
+      <div class="backgropp"></div>
+      <div class="modal-content box shadow" style="width: 600px;">
+          <!-- <div class="column col-4 bg-light">
+            <h2>Saved sessions</h2>
+            <div class="list">
+              <p class="box big-btn shadow" v-for="session in ['Söndag morgonmöte', 'Söndagsgudstjänst', 'Måndag']" :key="session">
+                {{session}}
+              </p>
+            </div>
+          </div> -->
+            <div class="close" @click="sessionModalIsOpen = false;">&times;</div>
+            <img src="@/assets/new.png" style="width: 25%;">
+            <h1>Give me a name!</h1>
+            <div class="input" :class="{error}">
+              <input v-model="newSessionName"/>
+            </div>
+            <p v-if="error" class="error">{{error}}</p>
+            <div class="big-btn box shadow" @click="newSession(newSessionName)">Create session</div>
+      </div>
+    </div>
+
+    <!-- Settings panel -->
+    <div class="modal" :class="{open: settingsModalIsOpen}">
+      <div class="backgropp"></div>
+      <div class="modal-content box shadow">
+        <div class="close" @click="settingsModalIsOpen = false;">&times;</div>
+        <h1 class="title">Settings</h1>
+        <div class="columns" style="overflow: scroll;">
+          <div class="column col-5">
+            <h2>Screen</h2>
+            <input class="input form-input" style="width: 100px;" v-model="bg">
+            <div class="btn-group btn-group-block">
+              <div class="transparent-bg" :style="{background: bg != 'transparent' ? bg : ''}" style="width: 30px; height: 30px; margin: 0;"></div>
+              <button class="btn" @click="setBg(bg)">Set color</button>
+            </div>
+
+
+            <div>
+              <h2>Stop All</h2>
+              <div class="btn-group btn-group-block">
+                <button class="btn" @click="stopAll()">Stop all</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="column col-4 bg-light">
+            <h2>Saved sessions</h2>
+            <div class="list">
+              <p class="box big-btn shadow" v-for="sessionName in session_list" :key="sessionName" @click="$socket.emit('session_load', sessionName)">
+                {{ sessionName }}
+              </p>
+              <!-- <p class="box big-btn shadow">
+                <input id="new_session_input" placeholder="Name" style="width: 100%; border: none;">
+              </p> -->
+            </div>
+
+            <div>
+              <h2>New session</h2>
+              <div class="btn-group btn-group-block">
+                <button class="btn" @click="settingsModalIsOpen = false; sessionModalIsOpen = true">Create</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
   </div>
 </template>
 
@@ -27,19 +161,41 @@ export default {
       sessionModalIsOpen: false,
       templateModalIsOpen: false,
       settingsModalIsOpen: false,
-      
+      // db: {
+      //   title: [],
+      //   tema: [],
+      //   datum: [],
+      //   namnskylt: [],
+      //   lowerthird: [],
+      //   titlesmall: []
+      // },
       session: {
         sessionName: undefined,
         texts: [],
         templates: {},
       },
       session_list: [],
+      // compositions: [
+      //   [{
+      //     component: 'title',
+      //     play: 0,
+      //     stop: 3
+      //   },{
+      //     component: 'namnskylt',
+      //     play: 3,
+      //     stop: 0
+      //   }]
+      // ]
     }
   },
   computed: {
     activeControls() {
-      return this.controls.filter(c=>c.active)
+      return this.controls.filter(c=>!!this.session.templates[c.component])
+      // return this.controls.filter(c=>c.active)
     }, 
+    // templates() {
+    //   return controls.filter(template => !!this.session.templates[template.component])
+    // },
   },
   created () {
     setTimeout(()=>{this.tick = true},0)
@@ -51,6 +207,29 @@ export default {
     this.$socket.emit('session_list')
   },
   methods: {
+    // intro () {
+    //   this.$socket.emit('data', {event: 'lowerthird_play'})
+    //   setTimeout(()=>{ this.$socket.emit('data', {event: 'lowerthird_stop'})}, 5000)
+    //   setTimeout(()=>{ 
+    //     this.$socket.emit('data', {event: 'datum_play'})
+    //     this.$socket.emit('data', {event: 'tema_play'})
+    //   }, 6000)
+    //   setTimeout(()=>{ this.$socket.emit('data', {event: 'datum_stop'})}, 10000)
+    // },
+    setBg() {
+      this.$socket.emit('data', {event: 'background', data: this.bg})
+    },
+    // playKeyframes(composition) {
+    //   composition.map(keyframe=>{
+    //     setTimeout(()=>{ this.$socket.emit('data', {event: keyframe.component+'_play'})}, keyframe.play*1000)
+    //     if (keyframe.stop) setTimeout(()=>{ this.$socket.emit('data', {event: keyframe.component+'_stop'})}, keyframe.stop*1000)
+    //   })
+    // },
+    stopAll () {
+      this.controls.map(control=>{
+        this.$socket.emit('data', {event: control.event+'_stop'})
+      })
+    },
     newSession(sessionName) {
       if(!sessionName) {
         this.error = 'OBS! The session need a name.'
@@ -63,9 +242,9 @@ export default {
       this.$socket.emit('session_create', sessionName)
       this.sessionModalIsOpen = false
     },
-    // sessionHasTemplate(control) {
-    //   return this.session.templates.hasOwnProperty(control.component)
-    // },
+    sessionHasTemplate(control) {
+      return this.session.templates.hasOwnProperty(control.component)
+    },
     addTemplate(template) {
       this.session.templates[template.component] = []
       this.saveSession()
@@ -76,17 +255,12 @@ export default {
     },
     saveSession() {
       this.$socket.emit('session_save', this.session)      
-    },
-    setBg() {
-      this.$socket.emit('data', {event: 'background', data: this.bg})
-    },
-    // stopAll () {
-    //   this.controls.map(control=>{
-    //     this.$socket.emit('data', {event: control.event+'_stop'})
-    //   })
-    // },
+    }
   },
   sockets: {
+    // session_current: function(sessionName){
+    //   this.session.sessionName = sessionName
+    // },
     session_list: function(session_list){
       this.session_list = session_list
     },
