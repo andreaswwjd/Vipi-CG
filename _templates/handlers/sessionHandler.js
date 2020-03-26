@@ -1,4 +1,12 @@
 const fs = require('fs-extra')
+const path = require('path')
+
+let sissionsdir 
+if(process.env.NODE_ENV === 'server') {
+  sissionsdir = path.join(__dirname, '../sessions')
+} else {
+  sissionsdir = path.join(path.dirname(process.execPath), './sessions')
+}
 
 module.exports.sessionHandler = function(io, client) {
 
@@ -9,11 +17,11 @@ module.exports.sessionHandler = function(io, client) {
   // client.on('session_current', async () => {
     
   //   // Make session directory
-  //   let currentSessionName = await fs.readFile(`./sessions/current.txt`, 'utf8')
+  //   let currentSessionName = await fs.readFile(`${sissionsdir}/current.txt`, 'utf8')
   //   currentSessionName = currentSessionName.trim()
 
   //   // Check if session exists
-  //   if (await fs.pathExists(`./sessions/${currentSessionName}/session.txt`)) {
+  //   if (await fs.pathExists(`${sissionsdir}/${currentSessionName}/session.txt`)) {
 
   //     // Send current session to client
   //     client.emit('session_current', currentSessionName)
@@ -22,12 +30,12 @@ module.exports.sessionHandler = function(io, client) {
   //     client.watchers.session = await setWatcher(client, currentSessionName)
   
   //     // Get session templates
-  //     const templates = await fs.readJSON(`./sessions/${currentSessionName}/session.txt`, 'utf8')
+  //     const templates = await fs.readJSON(`${sissionsdir}/${currentSessionName}/session.txt`, 'utf8')
   //     client.emit('session', { templates })
 
   //     // Get session texts if exists
-  //     if (await fs.pathExists(`./sessions/${currentSessionName}/texts.txt`)) {
-  //       const textsRaw = await fs.readFile(`./sessions/${currentSessionName}/texts.txt`, 'utf8')
+  //     if (await fs.pathExists(`${sissionsdir}/${currentSessionName}/texts.txt`)) {
+  //       const textsRaw = await fs.readFile(`${sissionsdir}/${currentSessionName}/texts.txt`, 'utf8')
   //       const texts = textsRaw.split('\n').filter(text=>!!text)
   //       console.log('LOAD Session: ', {currentSessionName, templates, texts}) // DELETE
   //       client.emit('session', { texts })
@@ -45,17 +53,17 @@ module.exports.sessionHandler = function(io, client) {
   client.on('session_create', async sessionName => {
     
     // Make session directory
-    await fs.mkdir(`./sessions/${sessionName}`)
+    await fs.mkdir(`${sissionsdir}/${sessionName}`)
 
     // Make session files
-    await fs.writeFile(`./sessions/${sessionName}/session.txt`, '{}')
-    await fs.writeFile(`./sessions/${sessionName}/texts.txt`, '')
+    await fs.writeFile(`${sissionsdir}/${sessionName}/session.txt`, '{}')
+    await fs.writeFile(`${sissionsdir}/${sessionName}/texts.txt`, '')
 
     // Create watcher
     client.watchers.session = await setWatcher(client, sessionName)
 
     // Broadcast new session list to clients
-    io.sockets.emit('session_list', await fs.readdir('./sessions'))
+    io.sockets.emit('session_list', await fs.readdir(sissionsdir))
 
     console.log('Created new sessions: ', sessionName) // DELETE
   });
@@ -70,7 +78,7 @@ module.exports.sessionHandler = function(io, client) {
   client.on('session_list', async () => { 
 
     // Read sessions direcotory
-    let list = await fs.readdir('./sessions')
+    let list = await fs.readdir(sissionsdir)
 
     // Send session list to client
     client.emit('session_list', list.filter(f=>f!='current.txt'))
@@ -89,18 +97,18 @@ module.exports.sessionHandler = function(io, client) {
   client.on('session_load', async sessionName => { 
 
     // Check if session exists
-    if (await fs.pathExists(`./sessions/${sessionName}/session.txt`)) {
+    if (await fs.pathExists(`${sissionsdir}/${sessionName}/session.txt`)) {
 
       // Set new watcher
       client.watchers.session = await setWatcher(client, sessionName)
   
       // Get session templates
-      const templates = await fs.readJSON(`./sessions/${sessionName}/session.txt`, 'utf8')
+      const templates = await fs.readJSON(`${sissionsdir}/${sessionName}/session.txt`, 'utf8')
       client.emit('session', { sessionName, templates })
 
       // Get session texts if exists
-      if (await fs.pathExists(`./sessions/${sessionName}/texts.txt`)) {
-        const textsRaw = await fs.readFile(`./sessions/${sessionName}/texts.txt`, 'utf8')
+      if (await fs.pathExists(`${sissionsdir}/${sessionName}/texts.txt`)) {
+        const textsRaw = await fs.readFile(`${sissionsdir}/${sessionName}/texts.txt`, 'utf8')
         const texts = textsRaw.split('\n').filter(text=>!!text)
         console.log('LOAD Session: ', {sessionName, templates, texts}) // DELETE
         client.emit('session', { texts })
@@ -118,9 +126,11 @@ module.exports.sessionHandler = function(io, client) {
    */
   client.on('session_save', ({sessionName, templates = {}, texts = []} = {}) => { 
 
+    console.log('Saving SESSION:', sessionName)
+
     // Overwrite session files
-    fs.writeJSON(`./sessions/${sessionName}/session.txt`, templates, {spaces: '  ', EOL: '\n'})
-    if (texts[0]) fs.writeFile(`./sessions/${sessionName}/texts.txt`, texts.map(text => text.name).join('\n'))
+    fs.writeJSON(`${sissionsdir}/${sessionName}/session.txt`, templates, {spaces: '  ', EOL: '\n'})
+    if (texts[0]) fs.writeFile(`${sissionsdir}/${sessionName}/texts.txt`, texts.map(text => text.name).join('\n'))
 
     console.log('SAVED Session: ', {sessionName, templates, texts}) // DELETE
   });
@@ -137,13 +147,13 @@ module.exports.sessionHandler = function(io, client) {
   client.on('session_rename', async (fromName, toName) => { 
 
     // Get current sessions
-    let list = await fs.readdir('./sessions')
+    let list = await fs.readdir(sissionsdir)
     console.log(`Rename ${fromName} -> ${toName} in:`, list) // DELETE
 
     // If 'session-1' -> 'session-2' is possible, rename!
     if (list.includes(fromName) && !list.includes(toName)) {
-      await fs.move(`./sessions/${fromName}`, `./sessions/${toName}`)
-      list = await fs.readdir('./sessions')
+      await fs.move(`${sissionsdir}/${fromName}`, `${sissionsdir}/${toName}`)
+      list = await fs.readdir(sissionsdir)
 
       // Set new watcher
       client.watchers.session = await setWatcher(client, toName)
@@ -176,12 +186,12 @@ module.exports.sessionHandler = function(io, client) {
   client.on('session_delete', async sessionName => { 
 
     // Delete session if exists
-    if (await fs.pathExists(`./sessions/${sessionName}`)) {
-      fs.removeSync(`./sessions/${sessionName}`)
+    if (await fs.pathExists(`${sissionsdir}/${sessionName}`)) {
+      fs.removeSync(`${sissionsdir}/${sessionName}`)
     }
 
     // Broadcast session-list to clients
-    list = await fs.readdir('./sessions')
+    list = await fs.readdir(sissionsdir)
     io.sockets.emit('session_list', list.filter(f=>f!='current.txt'))
 
     console.log('LIST Sessions: ', list) // DELETE
@@ -200,17 +210,17 @@ async function setWatcher(client, sessionName) {
 }
 
 async function watchSession(client, sessionName) {
-  const watcher = fs.watch(`./sessions/${sessionName}`, async (event, filename)=>{
+  const watcher = fs.watch(`${sissionsdir}/${sessionName}`, async (event, filename)=>{
     if (event == 'change') {
       console.log('SESSION changed ', filename)
 
       if (filename == 'session.txt') {
-        const templates = await fs.readJSON(`./sessions/${sessionName}/${filename}`, 'utf8')
+        const templates = await fs.readJSON(`${sissionsdir}/${sessionName}/${filename}`, 'utf8')
         client.emit('session', { sessionName, templates })
       }
 
       if (filename == 'texts.txt') {
-        const textsRaw = await fs.readFile(`./sessions/${sessionName}/${filename}`, 'utf8')
+        const textsRaw = await fs.readFile(`${sissionsdir}/${sessionName}/${filename}`, 'utf8')
         client.emit('session', { sessionName, texts: textsRaw.split('\n').filter(text=>!!text) })
       }
     }

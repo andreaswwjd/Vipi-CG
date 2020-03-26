@@ -1,3 +1,4 @@
+const path = require('path')
 
 // CasparCG connection
 const { CasparCG } = require('casparcg-connection')

@@ -1,4 +1,13 @@
 const fs = require('fs-extra')
+const path = require('path')
+
+let libdir
+if(process.env.NODE_ENV === 'server') {
+  libdir = path.join(__dirname, '../library')
+} else {
+  libdir = path.join(path.dirname(process.execPath), './library')
+}
+
 
 const parse = (filename, raw) => {
   let splitted = raw.split(/\n|\r/)
@@ -20,7 +29,7 @@ module.exports.libraryHandler = function(io, client) {
   client.on('library_list', async () => { 
 
     // List library filenames
-    let list = await fs.readdir('./library')
+    let list = await fs.readdir(libdir)
 
     // Send library list to client
     client.emit('library_list', list)
@@ -36,15 +45,20 @@ module.exports.libraryHandler = function(io, client) {
   client.on('library_load', async fileName => { 
 
     // Check if textfile exists
-    if (await fs.pathExists(`./library/${fileName}`)) {
+    if (await fs.pathExists(`${libdir}/${fileName}`)) {
 
       // Set new watcher
       client.watchers.library = await setWatcher(client, fileName)
   
       // Get and parse textfile
-      const text = parse(fileName, await fs.readFile(`./library/${fileName}`, 'utf8'))
+      const current_song = parse(fileName, await fs.readFile(`${libdir}/${fileName}`, 'utf8'))
 
-      client.emit('library_load', { text })
+      client.emit('library_load', current_song)
+
+      // TODO: This should be solved with a watcher instead...
+      // List library filenames
+      let list = await fs.readdir(libdir)
+      client.emit('library_list', list)
     }
   });
 
@@ -56,13 +70,14 @@ module.exports.libraryHandler = function(io, client) {
   client.on('library_save', async ({ file, title = '', author = '', text = ''} = {}) => {
     
     // Make text file
-    await fs.writeFile(`./library/${file}`, title+'\n'+author+'\n'+text+'\n')
+    await fs.writeFile(`${libdir}/${file}`, title+'\n'+author+'\n'+text+'\n')
 
     // Create watcher
     client.watchers.library = await setWatcher(client, file)
 
     // Broadcast new library list to clients
-    io.sockets.emit('library_list', await fs.readdir('./library'))
+    io.sockets.emit('library_list', await fs.readdir(libdir))
+    client.emit('library_load', { file, title, author, text})
 
     console.log('Saved library file: ', file) // DELETE
   });
@@ -76,13 +91,13 @@ module.exports.libraryHandler = function(io, client) {
   client.on('library_rename', async (fromName, toName) => { 
 
     // Get current library lisr
-    let list = await fs.readdir('./library')
+    let list = await fs.readdir(libdir)
     console.log(`Rename ${fromName} -> ${toName} in:`, list) // DELETE
 
     // If 'name' -> 'newName' is possible, rename!
     if (list.includes(fromName) && !list.includes(toName)) {
-      await fs.move(`./library/${fromName}`, `./library/${toName}`)
-      list = await fs.readdir('./library')
+      await fs.move(`${libdir}/${fromName}`, `${libdir}/${toName}`)
+      list = await fs.readdir(libdir)
 
       // Set new watcher
       client.watchers.library = await setWatcher(client, toName)
@@ -113,12 +128,12 @@ module.exports.libraryHandler = function(io, client) {
   client.on('library_delete', async fileName => { 
 
     // Delete library file if exists
-    if (await fs.pathExists(`./library/${fileName}`)) {
-      fs.removeSync(`./library/${fileName}`)
+    if (await fs.pathExists(`${libdir}/${fileName}`)) {
+      fs.removeSync(`${libdir}/${fileName}`)
     }
 
     // Broadcast library-list to clients
-    list = await fs.readdir('./library')
+    list = await fs.readdir(libdir)
     io.sockets.emit('library_list', list)
 
     console.log('LIST Library: ', list) // DELETE
@@ -137,12 +152,13 @@ async function setWatcher(client, fileName) {
 }
 
 async function watchLibrary(client, fileName) {
-  const watcher = fs.watch(`./library/${fileName}`, async (event, filename)=>{
+  const watcher = fs.watch(`${libdir}/${fileName}`, async (event, filename)=>{
+    // Update client
     if (event == 'change') {
       console.log('FILE changed ', filename)
 
-      const text = parse(fileName, await fs.readFile(`./library/${filename}`, 'utf8'))
-      client.emit('text', { file: filename, ...text })
+      const changed_song = parse(fileName, await fs.readFile(`${libdir}/${filename}`, 'utf8'))
+      client.emit('text', { file: filename, ...changed_song })
 
     }
   })

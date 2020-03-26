@@ -1,0 +1,39 @@
+{
+  "EFS_Intro": [
+    {
+      "file": "",
+      "active": false,
+      "out": 6
+    }
+  ],
+  "EFS_Bild": [
+    {
+      "file": "",
+      "active": false,
+      "out": 6
+    }
+  ],
+  "EFS_Slideshow_start": [
+    {
+      "duration": "",
+      "active": false,
+      "out": 6
+    }
+  ],
+  "EFS_Datum": [
+    {
+      "f0": "Lötenkyrkan Uppsala",
+      "f1": "29 mars 2020 ",
+      "active": true,
+      "out": 6
+    }
+  ],
+  "EFS_Namnskylt": [
+    {
+      "f0": "",
+      "f1": "",
+      "active": false,
+      "out": 6
+    }
+  ]
+}

@@ -3,19 +3,18 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "node server.js",
+    "start": "NODE_ENV='server' node server.js",
     "setup": "npm install && node server.js"
   },
   "bin": "server.js",
   "pkg": {
     "assets": [
-      "session.txt",
       "index.html",
       "css/**/*.css",
       "fonts/**/*",
       "js/**/*.js",
       "img/**/**",
-      "sangplatta/**"
+      "handlers/**/**"
     ]
   },
   "dependencies": {

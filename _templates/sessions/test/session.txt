@@ -1,4 +1,0 @@
-{
-  "FKAB_Namnskylt": [],
-  "FKAB_Datum": []
-}

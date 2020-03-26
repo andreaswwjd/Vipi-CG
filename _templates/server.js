@@ -19,10 +19,18 @@ const { libraryHandler  } = require('./handlers/libraryHandler')
 const { producerHandler, connectToCaspar } = require('./handlers/producerHandler')
 // const { clientHandler   } = require('./handlers/clientHandler')
 
+let direcotory
+if(process.env.NODE_ENV === 'server') {
+  direcotory = __dirname
+} else {
+  direcotory = path.dirname(process.execPath)
+}
 
 
 const serve = async app => {
   app.use(express.static(path.join(__dirname, './')))
+  app.use(express.static(path.join(direcotory, './media/')))
+
   await connectToCaspar()
   
   io.on('connection', client => {
@@ -33,6 +41,17 @@ const serve = async app => {
     sessionHandler(io, client)
     libraryHandler(io, client)
     producerHandler(io, client)
+
+    client.on('media_list', async (dir = '') => { 
+
+      // Read sessions direcotory
+      let list = await fs.readdir(path.join(direcotory, `./media/${dir}`))
+  
+      // Send session list to client
+      client.emit('media_list', list)
+  
+      console.log('LIST Media: ', list.filter(file=>file!='.DS_Store')) // DELETE
+    });
   
     client.on('disconnect', () => { /* … */ });
   });
