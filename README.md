@@ -28,6 +28,7 @@ To make your own templates, you can either create your own template, or alternat
 ### Caspar CG integration
 
 To be able to export your templates into a Caspar CG readable format, run the following command:
+
 ```bash
 yarn caspar
 ```
