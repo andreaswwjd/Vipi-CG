@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import App from './App.vue'
 
-Vue.component('router-view', () => import('../src/templates/Title'))
+Vue.component('router-view', () => import('../src/EFS/Title'))
 Vue.config.productionTip = false
 
 new Vue({

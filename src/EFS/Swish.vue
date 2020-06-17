@@ -2,10 +2,10 @@
   <dir class="swish" :class="{ active }">
     <div class="bricka">
       <div class="text" :style="{transform: 'translateY('+tick*(-100)+'%)', transitionDuration: transition_time+'ms'}">
-        <strong v-html="f0" v-if="f0"></strong>
-        <strong v-html="f1" v-if="f1"></strong>
-        <strong v-html="f2" v-if="f2"></strong>
-        <strong v-html="f0" v-if="f0"></strong>
+        <div class="line" v-html="f0" v-if="f0"></div>
+        <div class="line" v-html="f1" v-if="f1"></div>
+        <div class="line" v-html="f2" v-if="f2"></div>
+        <div class="line" v-html="f0" v-if="f0"></div>
       </div>
     </div>
   </dir>
@@ -13,6 +13,7 @@
 <script>
 import { setInterval, clearInterval, setTimeout } from 'timers';
 import { constants } from 'crypto';
+const convert = require('xml-js');
 
 export default {
   data() {
@@ -25,7 +26,7 @@ export default {
       tick: 0,
       transition_time: 500,
       delay_time: 7000,
-      interval: function(){}
+      interval: setInterval(()=>{},5000)
     }
   },
   computed: {
@@ -36,6 +37,7 @@ export default {
   methods: {
     play() {
       this.active = true
+      clearInterval(this.interval)
       this.interval = setInterval(()=>{
         this.transition_time = 700
         this.tick++
@@ -44,7 +46,7 @@ export default {
           setTimeout(()=>{
             this.transition_time = 0
             this.tick = 0
-          },this.transition_time)
+          }, this.transition_time)
         }
       }, this.delay_time)
       console.log('Swish')
@@ -57,9 +59,18 @@ export default {
       console.log(this)
     },
     update(data) {
-      this.f0 = data.f0
-      this.f1 = data.f1
-      this.f2 = data.f2
+      if (typeof data == 'object') {
+        if (data.f0) this.f0 = data.f0
+        if (data.f1) this.f1 = data.f1
+        if (data.f2) this.f2 = data.f2
+      } else {
+        let parsed = convert.xml2js(data);
+        parsed.elements[0].elements.map(d=>{
+          if (d.attributes.id == 'f0') this.f0 = d.elements[0].attributes.value
+          if (d.attributes.id == 'f1') this.f1 = d.elements[0].attributes.value
+          if (d.attributes.id == 'f2') this.f2 = d.elements[0].attributes.value
+        })
+      }
     }
   },
   created() {
@@ -96,8 +107,9 @@ export default {
   font-family: Campton Book;
   font-size: 30px;
 
-  strong {
+  .line {
     font-family: Campton Semibold;
+    line-height: 30px;
   }
 }
 
@@ -138,15 +150,21 @@ $slidetime: 700ms;
 
     .text {
       height: 55px;
-      display: flex;
-      flex-direction: column;
-      box-sizing: border-box;
+      display: block;
+      // flex-direction: column;
+      // box-sizing: border-box;
 
       transition-timing-function: cubic-bezier(0.9,0,0.1,1);
       // transition: 500ms cubic-bezier(0.9,0,0.1,1);
-      >*{
-        height: 30px;
-        margin: 12.5px;
+      .line {
+        height: 55px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 13px;
+        width: 100%;
+        box-sizing: border-box;
+        text-align: center;
       }
     }
   } 

@@ -19,7 +19,7 @@
                 <input type="radio" @input="
                   row.active = true; dataRows.map((l,j)=>l.active = i==j); 
                   $socket.emit('data', {event: event+'_update', data: currentRow}); 
-                  $socket.emit('saveSession', dbSet);" 
+                  $emit('updaterows', dbSet);" 
                   :checked="row.active"
                 >
                 <i class="form-icon"></i>
@@ -30,11 +30,11 @@
           <td v-for="key in dataKeys" :key="key">
             <input class="form-input" type="text" :placeholder="placeholders[key]" v-model="row[key]" @keyup="
               $socket.emit('data', {event: event+'_update', data: currentRow})"
-              @blur="$socket.emit('saveSession', dbSet);"
+              @blur="$emit('updaterows', dbSet);"
             >
           </td>
           <!-- <td><i class="icon icon-cross" @click="dataRows.splice(i,1)"></i></td> -->
-          <td><div class="close" @click="dataRows.splice(i,1)">&times;</div></td>
+          <td><div class="close" @click="delDataRow(i)">&times;</div></td>
         </tr>
         <tr>
           <td v-if="dataRows.length >= 2" style="border: none"></td>
@@ -43,7 +43,10 @@
           </td>
           <td colspan="4">
             <div class="action-btns">
-              <button class="btn big-btn btn-success" @click="$socket.emit('data', {event: event+'_play'})">
+              <button class="btn big-btn btn-success" @click="
+                $socket.emit('data', {event: event+'_update', data: currentRow}); 
+                $socket.emit('data', {event: event+'_play'}) 
+              ">
                 Play
               </button>
               <button class="btn big-btn btn-error" @click="$socket.emit('data', {event: event+'_stop'})">
@@ -77,22 +80,36 @@ import { setTimeout } from 'timers';
 
 export default {
   name: 'tableview',
-  props: ['event', 'placeholders', 'title', 'channel', 'layer'],
+  props: ['event', 'placeholders', 'title', 'channel', 'layer', 'dataRows'],
   data () {
     return {
-      dataRows: [],
+      // dataRows: [],
       current: -1,
       out: 6
     }
   },
   created(){
-    this.addDataRow()
+    if(!this.dataRows.length) {
+      this.addDataRow()
+    }
+  },
+  mounted(){
+    if(this.dataRows.length) {
+      console.log('Update!')
+      this.$socket.emit('data', {event: this.event+'_update', data: this.currentRow}); 
+    }
   },
   methods: {
     addDataRow () {
       this.dataRows.push({...this.emptyDataObject, active: false, out: 6 })
+      this.$emit('updaterows', this.dbSet)
+    },
+    delDataRow (index) {
+      this.dataRows.splice(index,1)
+      this.$emit('updaterows', this.dbSet)
     },
     inOut (out) {
+      this.$socket.emit('data', {event: this.event+'_update', data: this.currentRow});
       this.$socket.emit('data', {event: this.event+'_play'})
       setTimeout(()=>{
         this.$socket.emit('data', {event: this.event+'_stop'})
@@ -115,17 +132,17 @@ export default {
       return dataObject
     },
     dbSet () {
-      return {key: this.event , value: this.dataRows}
+      return { key: this.event, rows: this.dataRows}
     }
   },
-  sockets: {
-    lastSession: function(db){
-      if(db[this.event]) {
-        this.dataRows = db[this.event]
-        this.$socket.emit('data', {event: this.event+'_update', data: this.currentRow});
-      }
-    }
-  }
+  // sockets: {
+  //   lastSession: function(db){
+  //     if(db[this.event]) {
+  //       this.dataRows = db[this.event]
+  //       this.$socket.emit('data', {event: this.event+'_update', data: this.currentRow});
+  //     }
+  //   }
+  // }
 }
 </script>
 <!--style lang="scss" src="../assets/spectre/spectre.scss" scoped></style>

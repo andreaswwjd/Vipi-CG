@@ -6,6 +6,7 @@
   </dir>
 </template>
 <script>
+const convert = require('xml-js');
 
 export default {
   data() {
@@ -27,9 +28,18 @@ export default {
       console.log(this)
     },
     update(data) {
-      this.f0 = data.f0
-      this.f1 = data.f1
-      this.f2 = data.f2
+      if (typeof data == 'object') {
+        if (data.f0) this.f0 = data.f0
+        if (data.f1) this.f1 = data.f1
+        if (data.f2) this.f2 = data.f2
+      } else {
+        let parsed = convert.xml2js(data);
+        parsed.elements[0].elements.map(d=>{
+          if (d.attributes.id == 'f0') this.f0 = d.elements[0].attributes.value
+          if (d.attributes.id == 'f1') this.f1 = d.elements[0].attributes.value
+          if (d.attributes.id == 'f2') this.f2 = d.elements[0].attributes.value
+        })
+      }
     }
   },
   created() {

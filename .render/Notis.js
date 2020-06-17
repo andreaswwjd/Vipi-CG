@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import App from './App.vue'
 
-Vue.component('router-view', () => import('../src/templates/Notis'))
+Vue.component('router-view', () => import('../src/EFS/Notis'))
 Vue.config.productionTip = false
 
 new Vue({

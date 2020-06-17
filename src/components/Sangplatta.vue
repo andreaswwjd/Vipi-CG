@@ -18,7 +18,7 @@
       fontFamily: style.fontFamily ? style.fontFamily + ', Josefin Sans' : 'Josefin Sans',
       fontSize: style.fontSize ? style.fontSize+'px' : '50px',
       color: style.color || 'white',
-      background: style.background || 'radial-gradient(rgba(0,0,0,0.40), rgba(0,0,0,0.15))', 
+      background: style.background || 'radial-gradient(rgba(0,0,0,0), rgba(0,0,0,0))', 
       bottom: style.bottom || '5%',
       left: style.left || '0%',
       right: style.right || '0%',

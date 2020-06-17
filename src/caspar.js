@@ -1,13 +1,13 @@
 
 module.exports = {
-  // Datum: './EFS/Datum',
-  // LivsvagTitle: './EFS/LivsvagTitle',
-  // LowerThird: './EFS/LowerThird',
-  // Namnskylt: './EFS/Namnskylt',
-  // Notis: './EFS/Notis',
-  // Swish: './EFS/Swish',
-  // Tema: './EFS/Tema',
-  // Title: './EFS/Title',
+  Datum: './EFS/Datum',
+  LivsvagTitle: './EFS/LivsvagTitle',
+  LowerThird: './EFS/LowerThird',
+  Namnskylt: './EFS/Namnskylt',
+  Notis: './EFS/Notis',
+  Swish: './EFS/Swish',
+  Tema: './EFS/Tema',
+  Title: './EFS/Title',
   // Bibelord: './EFS/Bibelord',
 
   // FKAB_Namnskylt: './FKAB/Namnskylt',

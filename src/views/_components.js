@@ -14,6 +14,7 @@ export const controls = Object.keys(templates).map((name, i)=>({
   placeholders: templates[name].placeholders,
   event: name, 
   component: name, 
+  active: false,
   channel: 1,
   layer: 700 + i
 }))

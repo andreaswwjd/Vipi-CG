@@ -8,10 +8,13 @@
     <div class="row">
       <div class="col col-3">
         
-        <div class="files box" v-if="songs.length">
+        <div class="files box" v-if="list.length">
           <h2>Filer</h2>
-          <div class="file" v-for="(song,i) in songs" :key="song.file" :class="{current: current_song.file == song.file}" @click="selectFile(i)">
+          <!-- <div class="file" v-for="(song,i) in songs" :key="song.file" :class="{current: current_song.file == song.file}" @click="selectFile(i)">
             <p>{{song.file}}</p>
+          </div> -->
+          <div class="file" v-for="filename in list" :key="filename" :class="{current: current_song.file == filename}" @click="getFile(filename)">
+            <p>{{filename}}</p>
           </div>
           <div class="btn box shadow" @click="modalIsOpen = true; filename = ''; error = ''">Ny fil</div>
         </div>
@@ -62,14 +65,14 @@
       </div>
       
       <div class="col col-6">
-        <div v-if="!current_song" class="box shadow emptybox" >
+        <div v-if="!current_song.file" class="box shadow emptybox" >
           <img src="@/assets/empty.png" style="width: 50%;">
           <h2 style="margin-bottom: 0;">Hoppsan! Här var det tomt!</h2>
           <p style="color: #666;">Lägg till några .txt filer i samma folder som <br>programmet så dyker dom upp här.</p>
           <div class="btn box shadow" @click="modalIsOpen = true; filename = ''; error = ''">Ny fil</div>
         </div>
 
-        <div v-if="current_song" class="box shadow" style="width: 100%; position: relative;">
+        <div v-if="current_song.file" class="box shadow" style="width: 100%; position: relative;">
           <div class="box btn edit" @click="editor()">{{edit ? 'Spara' : 'Redigera'}}</div>
           <div v-if="!edit">
             <h1>{{current_song.title}}</h1>
@@ -84,7 +87,7 @@
             </p>
           </div>
 
-          <div v-if="current_song && edit">
+          <div v-if="current_song && current_song.file && edit">
             <input class="title" placeholder="Titel" v-model="current_song.title">
             <input class="writer" placeholder="Text & musik" v-model="current_song.author">
             <textarea id="editor" type="text" v-model="current_song.text" :style="{height: lines.length * 30+30+'px'}"/>
@@ -130,6 +133,12 @@ export default {
   },
   data () {
     return {
+      current_song: { 
+        file: '', 
+        title: '', 
+        author: '', 
+        text: ''
+      },
       tick: true,
       edit: false,
       play_btn_hit: false,
@@ -139,6 +148,7 @@ export default {
       selected: 0,
       active: false,
       song_nr: 0, 
+      list: [],
       songs: [],
       newfilename: '',
       error: '',
@@ -151,9 +161,9 @@ export default {
       color: 'white',
       bg1: '#000', //
       bg2: '#000', //
-      opacityBg1: 40, //
-      opacityBg2: 15, //
-      radialBackground: true, //
+      opacityBg1: 0, //
+      opacityBg2: 0, //
+      radialBackground: false, //
       height: 60, 
       left: 0, //
       right: 0, //
@@ -165,11 +175,11 @@ export default {
     }
   },
   computed: {
-    current_song() {
-      return this.songs[this.song_nr]
-    },
+    // current_song() {
+    //   return this.songs[this.song_nr]
+    // },
     lines() {
-      return this.current_song.text.split(/\n|\r/)
+      return this.current_song ? this.current_song.text.split(/\n|\r/) : []
     },
     style() {
       return {
@@ -198,7 +208,6 @@ export default {
   },
   created () {
     document.onkeydown = event => {
-      console.log(event.code)
       // Save
       if(this.edit && (event.metaKey || event.ctrlKey) && event.code == 'KeyS' ) {
         event.preventDefault()
@@ -231,7 +240,7 @@ export default {
       }
     }
 
-    this.$socket.emit('getSongs')
+    this.$socket.emit('library_list')
     // setTimeout(()=>{this.tick = true},0)
     // setInterval(()=>{
     //   this.tick = false
@@ -274,16 +283,20 @@ export default {
     },
     save() {
       this.edit = false
-      this.$socket.emit('saveSong', this.current_song)
+      // this.$socket.emit('library_save', { file, title = '', author = '', text = ''})
+      this.$socket.emit('library_save', this.current_song)
       this.$socket.emit('data', {event: 'sangplatta_update', data: {...this.current_song, selected: this.selected } })
     },
     select(i) {
       this.selected = i
       this.$socket.emit('data', {event: 'sangplatta_update', data: { selected: this.selected } })
     },
-    selectFile(i) {
-      this.song_nr = i
-      this.$socket.emit('data', {event: 'sangplatta_update', data: {...this.songs[i], selected: this.selected } })
+    // selectFile(i) {
+    //   this.song_nr = i
+    //   this.$socket.emit('data', {event: 'sangplatta_update', data: {...this.songs[i], selected: this.selected } })
+    // },
+    getFile(filename) {
+      this.$socket.emit('library_load', filename)
     },
     updateStyle() {
       this.$socket.emit('data', {event: 'sangplatta_update', data: {style: this.style} })
@@ -312,12 +325,12 @@ export default {
         this.error = 'OBS! Du måste ge filen ett namn.'
         return 
       }
-      if (this.songs.find(s=>s.file == filename)) {
+      if (this.list.find(file=>file == filename)) {
         this.error = 'OBS! Filnamnet finns redan.'
         return 
       }
 
-      this.songs.push({
+      this.$socket.emit('library_save', {
         file: filename+'.txt',
         title: '',
         author: '',
@@ -327,21 +340,28 @@ export default {
       this.error = ''
       this.newfilename = ''
       this.modalIsOpen = false
-      this.song_nr = this.songs.length - 1
+      // this.song_nr = this.songs.length - 1
     }
   },
   sockets: {
-    songs(songs) {
-      this.songs = songs
+    library_list(list) {
+      this.list = list
+    },
+    library_load(current_song) {
+      this.current_song = current_song
+      this.$socket.emit('data', {event: 'sangplatta_update', data: {...this.current_song, selected: this.selected}})
     },
     text({file, title = '', author = '', text = ''}) {
-      this.songs = this.songs.map((s,i)=>{
-        if (s.file == file) s = {file, title, author, text}
-        return s
-      })
-      if (!this.songs.find(s => s.file == file)) {
-        this.songs.push({file, title, author, text})
+      if (file == this.current_song.file) {
+        this.current_song = {file, title, author, text}
       }
+      // this.songs = this.songs.map((s,i)=>{
+      //   if (s.file == file) s = {file, title, author, text}
+      //   return s
+      // })
+      // if (!this.songs.find(s => s.file == file)) {
+      //   this.songs.push({file, title, author, text})
+      // }
     }
   },
 }
