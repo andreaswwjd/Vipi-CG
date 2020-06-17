@@ -1,2 +1,3 @@
 node_modules
-_sangserver/node_modules
+dist/*
+caspar/*

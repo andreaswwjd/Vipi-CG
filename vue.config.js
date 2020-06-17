@@ -1,31 +1,13 @@
-// const server = require('./server/server')
+const caspar = (process.argv[3] == 'caspar')
+if (process.argv[2] == 'serve') require('./server')
 
 module.exports = {
   publicPath: '',
-  outputDir: '_templates',
+  outputDir: (caspar ? 'caspar' : 'dist'),
+  pages: (caspar ? require('./.render/_pages') : { index: 'src/_server.js'}),
   // devServer: {
-  //   before: server
-  // },
-  pages: {
-    index: 'src/_server.js',
-    // control: 'src/_control.js',
-    // green: {
-    //   entry: 'src/_all.js',
-    //   template: 'public/green.html',
-    // },
-    // black: {
-    //   entry: 'src/_all.js',
-    //   template: 'public/black.html',
-    // },
-    // datum: 'src/datum.js',
-    // lowerthird: 'src/lowerthird.js',
-    // namnskylt: 'src/namnskylt.js',
-    // sangplatta: 'src/sangplatta.js',
-    // notis: 'src/notis.js',
-    // swish: 'src/swish.js',
-    // tema: 'src/tema.js',
-    // title: 'src/title.js',
-    // livsvag_title: 'src/livsvag_title.js',
-    // bibelord: 'src/bibelord.js',
-  },
+  //   proxy: 'http://127.0.0.1:3000',
+  //   port: 8080,
+  //   host: '127.0.0.1'
+  // }
 }

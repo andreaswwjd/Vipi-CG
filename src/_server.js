@@ -1,15 +1,13 @@
 import Vue from 'vue'
 import App from './App.vue'
-import router from './_router.js'
+import router from './views/_router.js'
 import VueSocketIO from 'vue-socket.io'
 
 
 Vue.config.productionTip = false
 Vue.use(new VueSocketIO({
   debug: true,
-  // connection: 'localhost:3000',
-  connection: window.location.origin,
-  // options: {path: '/'}
+  connection: window.location.hostname + ':3000',
 }))
 
 new Vue({

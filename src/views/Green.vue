@@ -1,43 +1,17 @@
 <template>
   <div class="container" :style="{background: bg}">
-    <Datum/>
-    <LivsvagTitle/>
-    <LowerThird/>
-    <Namnskylt/>
-    <Notis/>
-    <Swish/>
-    <Tema/>
-    <Title/>
-    <Bibelord/>
-    <Sangplatta/>
+    <component v-for="comp_name in comp_names" :is="comp_name" :key="comp_name"></component>
   </div>
 </template>
 <script>
-import Datum from '@/templates/Datum.vue';
-import LivsvagTitle from '@/templates/LivsvagTitle.vue';
-import LowerThird from '@/templates/LowerThird.vue';
-import Namnskylt from '@/templates/Namnskylt.vue';
-import Notis from '@/templates/Notis.vue';
-import Swish from '@/templates/Swish.vue';
-import Tema from '@/templates/Tema.vue';
-import Title from '@/templates/Title.vue';
-import Bibelord from '@/templates/Bibelord.vue';
-import Sangplatta from '@/templates/Sangplatta.vue';
+import components from './_components';
 
 export default {
   components: {
-    Datum,
-    LivsvagTitle,    
-    LowerThird,
-    Namnskylt,
-    Notis,
-    Swish,
-    Tema,
-    Title,
-    Bibelord,
-    Sangplatta,
+    ...components,
   },
   data: ()=>({
+    comp_names: Object.keys(components),
     bg: '#0F0'
   }),
   sockets: {
@@ -49,7 +23,10 @@ export default {
   }
 }
 </script>
-<style>
+<style scoped>
+html {
+  overflow: hidden;
+}
 body {
   color: #262626;
   position: relative;
@@ -58,7 +35,7 @@ body {
   height: 56.25vw;
   max-width: 100vw;
   max-height: 100vh;
-  /* background-image: url(./assets/testscreen.png); */
+  /* background-image: url(../assets/testscreen.png); */
   /* background-color: #0F0; */
   background-repeat: no-repeat;
   background-size: cover; 
@@ -79,6 +56,7 @@ body {
   align-items: center;
   justify-content: center;
   position: absolute;
+  overflow: hidden;
   bottom: 0; 
   top: 0; 
   left: 0; 
