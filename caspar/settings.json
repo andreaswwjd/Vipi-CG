@@ -1,9 +1,0 @@
-{
-  "directory": "./",
-  "current_session": null,
-  "caspar_connection": {
-    "host": "localhost",
-    "port": "5250"
-  },
-  "views": {}
-}
