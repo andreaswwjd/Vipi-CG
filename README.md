@@ -7,7 +7,7 @@ Vipi CG is a Vue.js based project for handling and live HTML-graphics.
 Clone the projekt on to your computer:
 
 ```bash
-git clone https://github.com/andreaswwjd/CasparCG-HTML-templates.git
+git clone https://github.com/andreaswwjd/Vipi-CG
 ```
 
 ## Usage
